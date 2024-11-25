@@ -1,0 +1,7 @@
+{
+    "include": [
+      "src/**/*.ts",  // Adicione seu diretório principal
+      "src/**/*.test.ts"  // Adicione um padrão que inclua arquivos de teste se necessário
+    ],
+    "exclude": ["node_modules", "dist"],
+}
