@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  # app:
+  #   build: .
+  #   ports:
+  #     - 3004:3004
+  #   env_file:
+  #     - .env.docker
+  #   depends_on:
+  #     - opt-final-db
+  opt-final-db:
+    image: postgres:16.4
+    container_name: opt_final_db
+    restart: always
+    tty: true
+    volumes:
+      - ./.docker/dbdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+volumes:
+  .docker:
