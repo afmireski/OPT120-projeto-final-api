@@ -43,7 +43,6 @@ erDiagram
         bool approved
         datetime created_at
         datetime updated_at
-        datetime deleted_at "nullable"
     }
 
     Rooms ||--o{ Hours : "possuí"
