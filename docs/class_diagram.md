@@ -58,6 +58,7 @@ classDiagram
         <<enumeration>>
         ADM
         ALUNO
+        SERVIDOR
     }
 
     Booking "0..N" --* "1" Room : possuí
