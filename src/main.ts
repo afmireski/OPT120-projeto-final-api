@@ -32,7 +32,6 @@ async function main() {
     },
   });
 
-
   const port = configService.get('PORT') || 3000;
 
   app.listen(port, () => {
