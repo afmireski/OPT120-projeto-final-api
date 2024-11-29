@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { router } from './routes/router';
 import { ConfigService } from './config/config.service';
+import { KnexService } from './services/knex.service';
 
 async function main() {
   const app = express();
@@ -19,6 +20,18 @@ async function main() {
   app.use('/', router);
 
   const configService = ConfigService.create();
+  KnexService.create({
+    client: 'pg',
+    connection: process.env.DATABASE_URL,
+    pool: {
+      min: 2,
+      max: 10,
+    },
+    migrations: {
+      tableName: 'knex_migrations',
+    },
+  });
+
 
   const port = configService.get('PORT') || 3000;
 
