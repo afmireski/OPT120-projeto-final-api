@@ -5,6 +5,10 @@ const errors: Record<number, InternalMessage> = {
     message: 'Invalid input',
     httpCode: 400,
   },
+  2: {
+    message: 'Credenciais Inválidas',
+    httpCode: 401,
+  },
 };
 
 export default errors;

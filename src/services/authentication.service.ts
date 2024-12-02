@@ -1,3 +1,4 @@
+import { InternalError } from '../errors/internal.error';
 import {
   LoginInput,
   LoginResponse,
@@ -11,22 +12,28 @@ import * as jwt from 'jsonwebtoken';
 export const login = async (input: LoginInput): Promise<LoginResponse> => {
   const { email, ra, password } = input;
 
+  if (!email && !ra) {
+    throw new InternalError(1, ['email or ra is required']);
+  }
+
+  const credential = email ?? ra;
+
   const knex = KnexService.getInstance().knex;
 
   const user = await knex('users')
     .select('*')
     .where((qb) => {
-      return qb.where('email', email).orWhere('ra', ra);
+      return qb.where('email', credential).orWhere('ra', credential);
     })
     .whereNull('deleted_at')
     .first();
 
   if (!user) {
-    throw new Error('User not found');
+    throw new InternalError(2);
   }
 
   if (!bcrypt.compareSync(password, user.password)) {
-    throw new Error('Invalid credentials');
+    throw new InternalError(2);
   }
 
   const { id, email: userEmail, role } = user;
