@@ -16,7 +16,7 @@ export class KnexService {
     return this.instance;
   }
 
-  static getInstance() {
+  static getInstance(): KnexService {
     if (!this.instance) {
       throw new Error('KnexService is not initialized');
     }
