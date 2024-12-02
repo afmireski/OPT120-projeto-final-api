@@ -9,6 +9,10 @@ const errors: Record<number, InternalMessage> = {
     message: 'Credenciais Inválidas',
     httpCode: 401,
   },
+  3: {
+    message: 'Token inválido',
+    httpCode: 403,
+  },
 };
 
 export default errors;
