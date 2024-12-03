@@ -15,15 +15,4 @@ router.post(
   internalErrorsMiddleware,
 );
 
-router.get(
-  '/x',
-  authenticationMiddleware,
-  roleMiddleware(['STUDENT', 'ADMIN']),
-  (req: Request, res) => {
-    console.log(req.user);
-
-    res.status(204).json();
-  },
-);
-
 export default router;
