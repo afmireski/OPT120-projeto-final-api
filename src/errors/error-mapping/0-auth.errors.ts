@@ -11,6 +11,10 @@ const errors: Record<number, InternalMessage> = {
   },
   3: {
     message: 'Token inválido',
+    httpCode: 400,
+  },
+  4: {
+    message: 'Você não tem as permissões necessárias para acessar este recurso',
     httpCode: 403,
   },
 };

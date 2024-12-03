@@ -4,10 +4,10 @@ import {
   LoginResponse,
   TokenPayload,
 } from '../types/authentication.types';
+import { generateToken } from '../utils/jwt.utils';
 import { KnexService } from './knex.service';
 
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
 
 export const login = async (input: LoginInput): Promise<LoginResponse> => {
   const { email, ra, password } = input;
@@ -46,9 +46,7 @@ export const login = async (input: LoginInput): Promise<LoginResponse> => {
     },
   };
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET!, {
-    expiresIn: process.env.JWT_EXPIRES_IN,
-  });
+  const token = generateToken(payload);
 
   return {
     email: userEmail,
