@@ -7,7 +7,8 @@ export const roleMiddleware = (roles: Array<keyof typeof UserRole>) => {
     const { user } = req;
 
     if (!user || !roles.includes(user?.role)) {
-      next(new InternalError(4));
+      const error = new InternalError(4);
+      res.status(error.httpCode).json(error);
       return;
     }
 
