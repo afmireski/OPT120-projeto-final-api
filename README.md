@@ -26,6 +26,9 @@ npm install
 # Suba o banco de dados com o docker
 docker-compose up -d
 
+# Carregue as variáveis de ambiente
+mise env
+
 # Migre o banco
 npm run migrate
 
