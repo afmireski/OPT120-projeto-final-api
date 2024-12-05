@@ -1,0 +1,24 @@
+post:
+  tags:
+    - users
+  summary: Cria um novo usuário administrador
+  description: ""
+  parameters:
+    - in: requestBody
+      name: email
+      description: email do usuário
+      type: string
+      required: true
+    - in: requestBody
+      name: name
+      description: nome do usuário
+      type: string
+      required: true
+    - in: requestBody
+      name: password
+      description: senha do usuário
+      type: string
+      required: true
+  responses:
+    '201':
+      description: Usuário criado com sucesso
