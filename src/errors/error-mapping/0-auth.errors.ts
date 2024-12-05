@@ -2,7 +2,7 @@ import { InternalMessage } from '../internal.error';
 
 const errors: Record<number, InternalMessage> = {
   1: {
-    message: 'Invalid input',
+    message: 'Entrada inválida',
     httpCode: 400,
   },
   2: {
