@@ -4,6 +4,11 @@ post:
   summary: Cria um novo usuário administrador
   description: ""
   parameters:
+    - in: headers
+      name: authorization
+      description: Token de autenticação
+      type: string
+      required: true
     - in: requestBody
       name: email
       description: email do usuário
