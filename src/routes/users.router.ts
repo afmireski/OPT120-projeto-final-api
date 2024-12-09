@@ -7,9 +7,11 @@ import { authenticationMiddleware } from '../middlewares/authentication.middlewa
 import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
 import { roleMiddleware } from '../middlewares/role.middleware';
 import { validatorMiddleware } from '../middlewares/validators.middleware';
+import { RegisterHandler } from '../users/users.controller';
 import {
   findUserByIdSchema,
   registerAdminSchema,
+  registerSchema,
 } from '../validators/users/users.schemas';
 
 export const router = Router();
@@ -29,6 +31,13 @@ router.get(
   roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
   validatorMiddleware(findUserByIdSchema, 1),
   findUserByIdHandler,
+  internalErrorsMiddleware,
+);
+
+router.post(
+  '/api/users/create_account',
+  validatorMiddleware(registerSchema, 1),
+  RegisterHandler,
   internalErrorsMiddleware,
 );
 
