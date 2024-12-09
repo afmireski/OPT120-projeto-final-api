@@ -1,0 +1,37 @@
+post:
+  tags:
+    - auth
+  summary: Login
+  description: ""
+  parameters:
+    - in: requestBody
+      name: email
+      description: email do usuário
+      type: string
+      required: optional
+    - in: requestBody
+      name: ra
+      description: ra do usuário
+      type: string
+      required: false
+    - in: requestBody
+      name: password
+      description: senha do usuário
+      type: string
+      required: true
+  responses:
+    '200':
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              token:
+                  type: string
+                  description: token de autenticação
+              email:
+                  type: string
+                  description: email do usuário
+              user_role:
+                  type: string
+                  description: papel do usuário
