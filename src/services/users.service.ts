@@ -46,6 +46,10 @@ export const findUserById = (id: number) => {
       return user;
     })
     .catch((error) => {
+      if (error instanceof InternalError) {
+        throw error;
+      }
+
       throw new InternalError(103, error.message);
     });
 };
