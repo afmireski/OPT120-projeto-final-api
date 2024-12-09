@@ -6,6 +6,13 @@ export interface LoginInput {
   password: string;
 }
 
+export interface RegisterInput {
+  email: string;
+  ra: string;
+  password: string;
+  user_role: keyof typeof UserRole;
+}
+
 export type TokenUserData = Pick<UserModel, 'id' | 'email' | 'role'>;
 
 export interface TokenPayload {
