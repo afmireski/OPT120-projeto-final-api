@@ -1,0 +1,13 @@
+openapi: 3.0.0
+info:
+  title: OPT120 Projeto Final API
+  description: Esta é a documentação da API para o projeto final da disciplina OPT120.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Servidor local de desenvolvimento
+paths:
+  /login:
+    $ref: './auth/login.yaml'
+  /api/users/new-admin:
+    $ref: './users/newAdmin.yaml'

@@ -1,4 +1,5 @@
-import errors from './error-mapping/0-auth.errors';
+import authErrors from './error-mapping/0-auth.errors';
+import usersErrors from './error-mapping/100-users.errors';
 
 export type InternalMessage = {
   httpCode: number;
@@ -26,7 +27,9 @@ export class InternalError {
         message: 'Um erro inesperado ocorreu',
       };
     } else if (this.code < 100) {
-      return errors[this.code];
+      return authErrors[this.code];
+    } else if (this.code < 200) {
+      return usersErrors[this.code];
     }
 
     this.code = -1;
