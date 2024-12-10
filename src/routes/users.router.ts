@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import {  findUserByIdHandler,
+import {
+  findUserByIdHandler,
   registerAdminHandler,
 } from '../controllers/users.controller';
 import { authenticationMiddleware } from '../middlewares/authentication.middleware';
@@ -10,7 +11,8 @@ import { validatorMiddleware } from '../middlewares/validators.middleware';
 import {
   findUserByIdSchema,
   registerAdminSchema,
-  registerSchema,alterUserSchema
+  registerSchema,
+  alterUserSchema,
 } from '../validators/users/users.schemas';
 
 export const router = Router();
