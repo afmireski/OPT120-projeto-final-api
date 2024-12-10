@@ -49,6 +49,7 @@ export const login = async (input: LoginInput): Promise<LoginResponse> => {
   const token = generateToken(payload);
 
   return {
+    id,
     email: userEmail,
     user_role: role,
     token,

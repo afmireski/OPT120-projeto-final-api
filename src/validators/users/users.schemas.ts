@@ -37,4 +37,15 @@ export const alterUserSchema = z.object({
     .refine((data) => !(data.email && data.password), {
       message: 'Only one of email or password must be provided',
     }),
+  });
+export const findUserByIdSchema = z.object({
+  params: z.object({
+    id: z
+      .string({
+        message: 'Id inválido',
+      })
+      .regex(/^\d+$/, {
+        message: 'Id deve ser um número válido',
+      }),
+  }),
 });

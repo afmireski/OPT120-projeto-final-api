@@ -9,6 +9,10 @@ const errors: Record<number, InternalMessage> = {
     message: 'Houve um erro ao tentar criar o usuário',
     httpCode: 500,
   },
+  103: {
+    message: 'Houve um erro ao tentar buscar o usuário',
+    httpCode: 500,
+  },
 };
 
 export default errors;

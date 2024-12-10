@@ -1,0 +1,51 @@
+get:
+  tags:
+    - users
+  summary: Busca um usuário pelo ID
+  description: ""
+  parameters:
+    - in: headers
+      name: authorization
+      description: Token de autenticação
+      type: string
+      required: true
+    - in: path
+      name: id
+      description: ID do usuário
+      type: string
+      required: true
+  responses:
+    '200':
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: number
+                description: ID do usuário
+                example: 1
+              email:
+                type: string
+                description: email do usuário
+                example: "johndoe@email.com"
+              name:
+                type: string
+                description: nome do usuário
+                example: "johndoe"
+              ra:
+                type: string
+                description: RA do usuário
+                nullable: true
+                example: null
+              role:
+                type: string
+                description: papel do usuário
+                example: "ADMIN"
+              created_at:
+                type: string
+                format: date-time
+                description: data de criação do usuário
+                example: "2024-12-09T00:08:05.025Z"
+    '404':
+      description: Usuário não encontrado
