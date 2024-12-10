@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import {
+  alterUserHandler,
   findUserByIdHandler,
   registerAdminHandler,
+  registerHandler,
 } from '../controllers/users.controller';
 import { authenticationMiddleware } from '../middlewares/authentication.middleware';
 import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
 import { roleMiddleware } from '../middlewares/role.middleware';
-import { alterUserHandler, RegisterHandler } from '../users/users.controller';
 import { validatorMiddleware } from '../middlewares/validators.middleware';
 import {
   findUserByIdSchema,
@@ -36,14 +37,14 @@ router.get(
 );
 
 router.post(
-  '/api/users/create_account',
+  '/users/create-account',
   validatorMiddleware(registerSchema, 1),
-  RegisterHandler,
+  registerHandler,
   internalErrorsMiddleware,
 );
 
-router.put(
-  '/api/users/alter_user',
+router.patch(
+  '/users/alter-user',
   authenticationMiddleware,
   validatorMiddleware(alterUserSchema, 1),
   alterUserHandler,

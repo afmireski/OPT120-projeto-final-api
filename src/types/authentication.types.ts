@@ -8,9 +8,10 @@ export interface LoginInput {
 
 export interface RegisterInput {
   email: string;
-  ra: string;
+  ra?: string;
+  name: string;
   password: string;
-  user_role: keyof typeof UserRole;
+  role: keyof typeof UserRole;
 }
 
 export type TokenUserData = Pick<UserModel, 'id' | 'email' | 'role'>;
