@@ -1,12 +1,18 @@
 import { Router } from 'express';
-import { registerSchema } from '../validators/users/users.schemas';
-import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
-import { validatorMiddleware } from '../middlewares/validators.middleware';
-import { registerAdminHandler } from '../controllers/users.controller';
-import { registerAdminSchema } from '../validators/users/users.schemas';
+import {
+  findUserByIdHandler,
+  registerAdminHandler,
+} from '../controllers/users.controller';
 import { authenticationMiddleware } from '../middlewares/authentication.middleware';
+import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
 import { roleMiddleware } from '../middlewares/role.middleware';
+import { validatorMiddleware } from '../middlewares/validators.middleware';
 import { RegisterHandler } from '../users/users.controller';
+import {
+  findUserByIdSchema,
+  registerAdminSchema,
+  registerSchema,
+} from '../validators/users/users.schemas';
 
 export const router = Router();
 
@@ -16,6 +22,15 @@ router.post(
   roleMiddleware(['ADMIN']),
   validatorMiddleware(registerAdminSchema, 1),
   registerAdminHandler,
+  internalErrorsMiddleware,
+);
+
+router.get(
+  '/users/:id',
+  authenticationMiddleware,
+  roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
+  validatorMiddleware(findUserByIdSchema, 1),
+  findUserByIdHandler,
   internalErrorsMiddleware,
 );
 

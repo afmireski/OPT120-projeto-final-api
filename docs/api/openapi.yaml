@@ -11,3 +11,6 @@ paths:
     $ref: './auth/login.yaml'
   /api/users/new-admin:
     $ref: './users/newAdmin.yaml'
+  /api/users/:id:
+    $ref: './users/findUserById.yaml'
+    

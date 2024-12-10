@@ -23,3 +23,15 @@ export const registerAdminSchema = z.object({
     password: z.string().min(6),
   }),
 });
+
+export const findUserByIdSchema = z.object({
+  params: z.object({
+    id: z
+      .string({
+        message: 'Id inválido',
+      })
+      .regex(/^\d+$/, {
+        message: 'Id deve ser um número válido',
+      }),
+  }),
+});
