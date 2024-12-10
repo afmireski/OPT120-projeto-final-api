@@ -20,6 +20,7 @@ export interface TokenPayload {
 }
 
 export interface LoginResponse {
+  id: number;
   token: string;
   email: string;
   user_role: keyof typeof UserRole;
