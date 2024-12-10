@@ -12,3 +12,5 @@
 * [#11](https://github.com/afmireski/OPT120-projeto-final-api/issues/11) - Criar rota que loga um usuário
 
 ### MODIFIED
+
+* Adicionado ID ao retorno do login
