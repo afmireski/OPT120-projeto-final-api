@@ -23,3 +23,18 @@ export const registerAdminSchema = z.object({
     password: z.string().min(6),
   }),
 });
+
+export const alterUserSchema = z.object({
+  body: z
+    .object({
+      email: z.string().email().optional(),
+      password: z.string().min(6).optional(),
+      name: z.string().min(3).max(200).optional(),
+    })
+    .refine((data) => data.email || data.password, {
+      message: 'Either email or password must be provided',
+    })
+    .refine((data) => !(data.email && data.password), {
+      message: 'Only one of email or password must be provided',
+    }),
+});
