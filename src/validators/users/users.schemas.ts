@@ -8,6 +8,7 @@ export const registerSchema = z.object({
         .string()
         .regex(/^\d{7}$/)
         .optional(),
+      name: z.string().min(3).max(200),
       password: z.string().min(6),
       role: z.enum(['SERVANT', 'STUDENT']),
     })
@@ -21,6 +22,14 @@ export const registerAdminSchema = z.object({
     email: z.string().email(),
     name: z.string().min(3).max(200),
     password: z.string().min(6),
+  }),
+});
+
+export const alterUserSchema = z.object({
+  body: z.object({
+    email: z.string().email().optional(),
+    password: z.string().min(6).optional(),
+    name: z.string().min(3).max(200).optional(),
   }),
 });
 

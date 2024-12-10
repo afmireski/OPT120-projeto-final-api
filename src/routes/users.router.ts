@@ -1,17 +1,19 @@
 import { Router } from 'express';
 import {
+  alterUserHandler,
   findUserByIdHandler,
   registerAdminHandler,
+  registerHandler,
 } from '../controllers/users.controller';
 import { authenticationMiddleware } from '../middlewares/authentication.middleware';
 import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
 import { roleMiddleware } from '../middlewares/role.middleware';
 import { validatorMiddleware } from '../middlewares/validators.middleware';
-import { RegisterHandler } from '../users/users.controller';
 import {
   findUserByIdSchema,
   registerAdminSchema,
   registerSchema,
+  alterUserSchema,
 } from '../validators/users/users.schemas';
 
 export const router = Router();
@@ -35,9 +37,17 @@ router.get(
 );
 
 router.post(
-  '/api/users/create_account',
+  '/users/create-account',
   validatorMiddleware(registerSchema, 1),
-  RegisterHandler,
+  registerHandler,
+  internalErrorsMiddleware,
+);
+
+router.patch(
+  '/users/alter-user',
+  authenticationMiddleware,
+  validatorMiddleware(alterUserSchema, 1),
+  alterUserHandler,
   internalErrorsMiddleware,
 );
 
