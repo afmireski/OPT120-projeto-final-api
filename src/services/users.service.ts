@@ -59,12 +59,13 @@ export const findUserById = (id: number) => {
 
 export const register = async (input: RegisterInput): Promise<void> => {
   const knex = KnexService.getInstance().knex;
-  const { password, ...data } = input;
+  const { password, ra, ...data } = input;
   const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
   await Promise.resolve(
     knex('users').insert({
       ...data,
+      ra: ra === '' ? null : ra,
       password: hashPassword,
     }),
   ).catch((error) => {
@@ -74,22 +75,29 @@ export const register = async (input: RegisterInput): Promise<void> => {
 
 export const alterUser = async (
   input: AlterUserInput,
-  x: number,
+  id: number,
 ): Promise<void> => {
   const { password, ...rest } = input;
   const knex = KnexService.getInstance().knex;
   const data = rest;
 
+  let hashPassword;
   if (password) {
-    const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+    hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
     Object.assign(data, { password: hashPassword });
   }
 
   if (Object.keys(data).length === 0) return;
 
-  await Promise.resolve(knex('users').update(data).where('id', x)).catch(
-    (error) => {
-      throw new InternalError(102, error.message);
-    },
-  );
+  await Promise.resolve(
+    knex('users')
+      .update({
+        email: data.email,
+        name: data.name,
+        password: hashPassword,
+      })
+      .where('id', id),
+  ).catch((error) => {
+    throw new InternalError(102, error.message);
+  });
 };
