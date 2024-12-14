@@ -7,10 +7,17 @@ servers:
   - url: http://localhost:3000
     description: Servidor local de desenvolvimento
 paths:
+  # Auth
   /login:
     $ref: './auth/login.yaml'
+
+  # Users
   /api/users/new-admin:
     $ref: './users/newAdmin.yaml'
   /api/users/:id:
     $ref: './users/findUserById.yaml'
+  
+  # Rooms
+  /api/rooms/:id/update:
+    $ref: './rooms/updateRoom.yaml'
     
