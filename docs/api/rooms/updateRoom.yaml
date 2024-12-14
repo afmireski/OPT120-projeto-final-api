@@ -1,0 +1,68 @@
+patch:
+  tags:
+    - rooms
+  summary: Atualiza as informações de uma sala
+  description: "Permite a um administrador atualizar as informações de uma sala"
+  parameters:
+    - in: headers
+      name: authorization
+      description: Token de autenticação
+      type: string
+      required: true
+    - in: requestBody
+      name: name
+      description: Nome da sala
+      type: string
+      required: false
+      example: "D101"
+    - in: requestBody
+      name: opening_hour
+      description: Hora de abertura da sala
+      type: string
+      required: false
+      example: "10:00:00"
+    - in: requestBody
+      name: closing_hour
+      description: Hora de fechamento da sala
+      type: string
+      required: false
+      example: "19:00:00"
+    - in: requestBody
+      name: informations
+      description: Informações adicionais da sala
+      required: false
+      schema:
+        type: object
+        properties:
+          capacity:
+            type: integer
+            description: Capacidade da sala
+            example: 40
+          resources:
+            type: array
+            items:
+              type: string
+            description: Recursos disponíveis na sala
+            example: ["Projetor", "Ar Condicionado", "Carteiras"]
+          description:
+            type: string
+            description: Descrição da sala
+            example: "Sala de Aula, Bloco D, Nº 101"
+  responses:
+    '200':
+      description: Sala atualiza com sucesso
+      content:
+        application/json:
+          example:
+            id: 4
+            name: "D101"
+            informations:
+              capacity: 40
+              resources:
+                - "Projetor"
+                - "Ar Condicionado"
+                - "Carteiras"
+              description: "Sala de Aula, Bloco D, Nº 101"
+            opening_hour: "10:00:00"
+            closing_hour: "19:00:00"
+            created_at: "2024-12-14T13:24:37.919Z"
