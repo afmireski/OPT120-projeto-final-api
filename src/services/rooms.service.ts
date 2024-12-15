@@ -1,7 +1,51 @@
 import { InternalError } from '../errors/internal.error';
 import { Room, RoomModel } from '../models/rooms.model';
-import { UpdateRoomInput } from '../types/rooms.types';
+import { ListRoomsInput, UpdateRoomInput } from '../types/rooms.types';
+import { MetadataArray } from '../types/types';
 import { KnexService } from './knex.service';
+
+export const listRooms = async (
+  input: ListRoomsInput,
+): Promise<MetadataArray<Room>> => {
+  const knex = KnexService.getInstance().knex;
+
+  const { filter, pagination } = input;
+
+  const countQuery = knex({ r: 'rooms' })
+    .count({ total: 'r.id' })
+    .whereNull('r.deleted_at');
+
+  KnexService.appendFiltersToQuery(countQuery, filter);
+
+  console.log('countQuery', countQuery.toString());
+
+  return countQuery
+    .then(async ([count]) => {
+      const query = countQuery.clone().clearSelect().select('r.*');
+      KnexService.addPaginationToQuery(query, pagination);
+      query.orderBy('r.id', 'desc');
+
+      console.log('query', query.toString());
+
+      const data: RoomModel[] = (await query) as RoomModel[];
+
+      const rooms = data.map(
+        ({ updated_at: _, deleted_at: __, ...rest }) => rest,
+      );
+
+      return {
+        metadata: {
+          total: Number(count.total!),
+          page: pagination?.page,
+          limit: pagination?.limit,
+        },
+        data: rooms,
+      };
+    })
+    .catch((e) => {
+      throw new InternalError(206, [e.message]);
+    });
+};
 
 export const updateRoom = async (
   id: number,
