@@ -20,4 +20,6 @@ paths:
   # Rooms
   /api/rooms/:id/update:
     $ref: './rooms/updateRoom.yaml'
+  /api/rooms/:
+    $ref: './rooms/listRooms.yaml'
     

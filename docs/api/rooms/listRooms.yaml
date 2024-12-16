@@ -1,0 +1,95 @@
+get:
+  tags:
+    - rooms
+  summary: Lista as informações de uma sala
+  description: "Permite a listagem das salas cadastradas"
+  parameters:
+    - in: headers
+      name: authorization
+      description: Token de autenticação
+      type: string
+      required: true'
+    - in: query
+      name: filter
+      description: Filtros para a busca
+      type: string
+      required: false
+      example: "{\"id\": {\"eq\":null,\"ne\":null,\"in\":[],\"nin\":[],\"like\":null,\"gte\":null,\"gt\":null,\"lte\":null,\"lt\":null},\"name\":{\"eq\":null,\"ne\":null,\"in\":[],\"nin\":[],\"like\":null,\"gte\":null,\"gt\":null,\"lte\":null,\"lt\":null}}"
+    - in: query
+      name: pagination
+      description: Paginação da busca
+      type: string
+      required: false
+      example: "{ \"page\": 1, \"limit\": 20 }"   
+      schema:
+        type: object
+        properties:
+          capacity:
+            type: integer
+            description: Capacidade da sala
+            example: 40
+          resources:
+            type: array
+            items:
+              type: string
+            description: Recursos disponíveis na sala
+            example: ["Projetor", "Ar Condicionado", "Carteiras"]
+          description:
+            type: string
+            description: Descrição da sala
+            example: "Sala de Aula, Bloco D, Nº 101"
+  responses:
+    '200':
+      description: Sala atualiza com sucesso
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metadata:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                    example: 3
+                  page:
+                    type: integer
+                    example: 1
+                  limit:
+                    type: integer
+                    example: 20
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 6
+                    name:
+                      type: string
+                      example: "Room 3"
+                    informations:
+                      type: object
+                      properties:
+                        capacity:
+                          type: integer
+                          example: 40
+                        resources:
+                          type: array
+                          items:
+                            type: string
+                          example: ["Projetor", "Computador", "Mesa", "Cadeira"]
+                        description:
+                          type: string
+                          example: "Sala de aula"
+                    opening_hour:
+                      type: string
+                      example: "13:30:00"
+                    closing_hour:
+                      type: string
+                      example: "18:00:00"
+                    created_at:
+                      type: string
+                      format: date-time
+                      example: "2024-12-14T13:24:37.919Z"
