@@ -1,6 +1,8 @@
 import { config } from 'dotenv';
 import { InternalError } from '../errors/internal.error';
 
+config();
+
 export class ConfigService {
   private static instance: ConfigService;
 

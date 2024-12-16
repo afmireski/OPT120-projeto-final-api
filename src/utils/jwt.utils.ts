@@ -4,7 +4,9 @@ import { TokenPayload } from '../types/authentication.types';
 const { JWT_SECRET, JWT_EXPIRES_IN } = process.env;
 
 export function generateToken(payload: TokenPayload): string {
-  return jwt.sign(payload, JWT_SECRET!, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign(payload, JWT_SECRET ?? 'secret', {
+    expiresIn: JWT_EXPIRES_IN ?? '1h',
+  });
 }
 
 export function verifyToken(token: string): TokenPayload | undefined {
