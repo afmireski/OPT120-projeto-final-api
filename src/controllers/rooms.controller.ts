@@ -1,5 +1,27 @@
 import { NextFunction, Request, Response } from 'express';
-import { updateRoom } from '../services/rooms.service';
+import { listRooms, updateRoom } from '../services/rooms.service';
+import { ListRoomsFilters } from '../types/rooms.types';
+
+export const listRoomsHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { filters: filter, pagination } = req;
+
+  const input = {
+    filter: filter as ListRoomsFilters,
+    pagination,
+  };
+
+  return listRooms(input)
+    .then((response) => {
+      res.status(200).json(response);
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
 
 export const updateRoomHandler = (
   req: Request,

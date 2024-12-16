@@ -17,6 +17,14 @@ const errors: Record<number, InternalMessage> = {
     message: 'Houve um erro ao tentar atualizar a sala',
     httpCode: 500,
   },
+  205: {
+    message: 'Houve um erro ao tentar excluir a sala',
+    httpCode: 500,
+  },
+  206: {
+    message: 'Houve um erro ao tentar listar as salas',
+    httpCode: 500,
+  },
 };
 
 export default errors;

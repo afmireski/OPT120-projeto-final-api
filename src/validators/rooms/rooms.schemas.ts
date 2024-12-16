@@ -1,4 +1,9 @@
 import { z } from 'zod';
+import {
+  numberRelationSchema,
+  paginationSchema,
+  stringRelationSchema,
+} from '../geral.schemas';
 
 export const updateRoomSchema = z.object({
   params: z
@@ -30,4 +35,14 @@ export const updateRoomSchema = z.object({
         .optional(),
     })
     .strict(),
+});
+
+export const listRoomsSchema = z.object({
+  filters: z
+    .object({
+      id: numberRelationSchema.optional(),
+      name: stringRelationSchema.optional(),
+    })
+    .optional(),
+  pagination: paginationSchema.optional(),
 });
