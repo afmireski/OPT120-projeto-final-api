@@ -10,7 +10,7 @@ export function generateToken(payload: TokenPayload): string {
 }
 
 export function verifyToken(token: string): TokenPayload | undefined {
-  const jwtResponse = jwt.verify(token, JWT_SECRET!);
+  const jwtResponse = jwt.verify(token, JWT_SECRET ?? 'secret');
 
   // Se volta uma string, tem algo de errado com o payload
   if (typeof jwtResponse === 'string') return undefined;
