@@ -120,3 +120,24 @@ export const updateRoom = async (
       throw new InternalError(204, [e.message]);
     });
 };
+
+export const deleteRoom = async (id: number): Promise<void> => {
+  const knex = KnexService.getInstance().knex;
+
+  const deleteQuery = knex('rooms')
+    .update({
+      deleted_at: knex.fn.now(),
+    })
+    .where('id', id)
+    .whereNull('deleted_at');
+
+  return deleteQuery
+    .then(() => {
+      return;
+    }).catch((e) => {
+      if (e instanceof InternalError) {
+        throw e;
+      }
+      throw new InternalError(204, [e.message]);
+    });
+};

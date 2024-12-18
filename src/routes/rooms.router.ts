@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  deleteRoomHandler,
   listRoomsHandler,
   updateRoomHandler,
 } from '../controllers/rooms.controller';
@@ -8,6 +9,7 @@ import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
 import { roleMiddleware } from '../middlewares/role.middleware';
 import { validatorMiddleware } from '../middlewares/validators.middleware';
 import {
+  deleteRoomSchema,
   listRoomsSchema,
   updateRoomSchema,
 } from '../validators/rooms/rooms.schemas';
@@ -36,4 +38,12 @@ router.patch(
   internalErrorsMiddleware,
 );
 
+router.delete(
+  '/rooms/:id/del',
+  authenticationMiddleware,
+  roleMiddleware(['ADMIN']),
+  validatorMiddleware(deleteRoomSchema, 1),
+  deleteRoomHandler,
+  internalErrorsMiddleware,
+);
 export default router;

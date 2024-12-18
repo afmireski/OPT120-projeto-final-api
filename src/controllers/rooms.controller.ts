@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { listRooms, updateRoom } from '../services/rooms.service';
+import { deleteRoom, listRooms, updateRoom } from '../services/rooms.service';
 import { ListRoomsFilters } from '../types/rooms.types';
 
 export const listRoomsHandler = (
@@ -43,6 +43,24 @@ export const updateRoomHandler = (
   return updateRoom(Number(roomId), input)
     .then((response) => {
       res.status(200).json(response);
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const deleteRoomHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const {
+    params: { id: roomId },
+  } = req;
+
+  return deleteRoom(Number(roomId))
+    .then(() => {
+      res.status(204).json();
     })
     .catch((e) => {
       next(e);

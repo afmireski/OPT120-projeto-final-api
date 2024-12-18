@@ -37,6 +37,20 @@ export const updateRoomSchema = z.object({
     .strict(),
 });
 
+export const deleteRoomSchema = z.object({
+  params: z
+    .object({
+      id: z
+        .string({
+          message: 'Id inválido',
+        })
+        .regex(/^\d+$/, {
+          message: 'Id deve ser um número válido',
+        }),
+    })
+    .strict(),
+});
+
 export const listRoomsSchema = z.object({
   filters: z
     .object({
