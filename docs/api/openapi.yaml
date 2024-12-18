@@ -22,4 +22,6 @@ paths:
     $ref: './rooms/updateRoom.yaml'
   /api/rooms/:
     $ref: './rooms/listRooms.yaml'
+  /api/rooms/:id:
+    $ref: './rooms/findRoomById.yaml'
     

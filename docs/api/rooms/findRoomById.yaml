@@ -1,0 +1,58 @@
+get:
+  tags:
+    - rooms
+  summary: Busca as informações de uma sala
+  description: "Permite buscar as informações de uma sala pelo ID"
+  parameters:
+    - in: headers
+      name: authorization
+      description: Token de autenticação
+      type: string
+      required: true'
+    - in: params
+      name: id
+      description: ID da sala
+      type: int
+      required: true
+      example: 1    
+  responses:
+    '200':
+      description: Sala encontrada com sucesso
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                example: 1
+              name:
+                type: string
+                example: "Room 1"
+              informations:
+                type: object
+                properties:
+                  capacity:
+                    type: integer
+                    example: 10
+                  resources:
+                    type: array
+                    items:
+                      type: string
+                    example: ["Projetor", "Computador"]
+                  description:
+                    type: string
+                    example: "Sala de reunião"
+              opening_hour:
+                type: string
+                format: time
+                example: "08:00:00"
+              closing_hour:
+                type: string
+                format: time
+                example: "18:00:00"
+              created_at:
+                type: string
+                format: date-time
+                example: "2024-12-16T23:34:45.953Z"
+            
