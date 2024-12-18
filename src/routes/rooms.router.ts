@@ -62,7 +62,6 @@ router.get(
 router.post(
   '/rooms/new',
   authenticationMiddleware,
-  roleMiddleware(['ADMIN']),
   validatorMiddleware(createRoomSchema, 1),
   createRoomHandler,
   internalErrorsMiddleware,
