@@ -6,6 +6,13 @@ export interface UpdateRoomInput {
   opening_hour?: Date;
   closing_hour?: Date;
 }
+export interface createRoomInput {
+  name: string;
+  informations?: Record<string, unknown>;
+  opening_hour: Date;
+  closing_hour: Date;
+}
+
 
 export type ListRoomsFilters = {
   id: FilterRelation<number>;
