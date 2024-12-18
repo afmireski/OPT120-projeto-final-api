@@ -1,5 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { findRoomById, listRooms, updateRoom } from '../services/rooms.service';
+import {
+  findRoomById,
+  deleteRoom,
+  listRooms,
+  updateRoom,
+} from '../services/rooms.service';
 import { ListRoomsFilters } from '../types/rooms.types';
 
 export const listRoomsHandler = (
@@ -61,6 +66,24 @@ export const findRoomByIdHandler = (
   return findRoomById(Number(roomId))
     .then((response) => {
       res.status(200).json(response);
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const deleteRoomHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const {
+    params: { id: roomId },
+  } = req;
+
+  return deleteRoom(Number(roomId))
+    .then(() => {
+      res.status(204).json();
     })
     .catch((e) => {
       next(e);
