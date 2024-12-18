@@ -1,6 +1,6 @@
 import { InternalError } from '../errors/internal.error';
 import { Room, RoomModel } from '../models/rooms.model';
-import { ListRoomsInput, UpdateRoomInput } from '../types/rooms.types';
+import { createRoomInput, ListRoomsInput, UpdateRoomInput } from '../types/rooms.types';
 import { MetadataArray } from '../types/types';
 import { KnexService } from './knex.service';
 
@@ -169,4 +169,20 @@ export const deleteRoom = async (id: number): Promise<void> => {
       }
       throw new InternalError(204, [e.message]);
     });
+};
+
+export const createRoom = async (input: createRoomInput): Promise<void> => {
+  const knex = KnexService.getInstance().knex;
+  const { name, informations, opening_hour, closing_hour} = input;
+  
+  await Promise.resolve(
+    knex('rooms').insert({
+      name:name,
+      informations: informations,
+      opening_hour: opening_hour,
+      closing_hour: closing_hour,
+    }),
+  ).catch((error) => {
+    throw new InternalError(102, error.message);
+  });
 };

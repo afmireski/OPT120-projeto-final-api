@@ -4,6 +4,7 @@ import {
   deleteRoom,
   listRooms,
   updateRoom,
+  createRoom,
 } from '../services/rooms.service';
 import { ListRoomsFilters } from '../types/rooms.types';
 
@@ -84,6 +85,31 @@ export const deleteRoomHandler = (
   return deleteRoom(Number(roomId))
     .then(() => {
       res.status(204).json();
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const createRoomHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const {
+    body: { name, informations, opening_hour, closing_hour},
+  } = req;
+
+  const input = {
+    name,
+    informations,
+    opening_hour,
+    closing_hour,
+  };
+
+  return createRoom(input)
+    .then((response) => {
+      res.status(200).json(response);
     })
     .catch((e) => {
       next(e);

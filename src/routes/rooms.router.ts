@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  createRoomHandler,
   deleteRoomHandler,
   findRoomByIdHandler,
   listRoomsHandler,
@@ -10,6 +11,7 @@ import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
 import { roleMiddleware } from '../middlewares/role.middleware';
 import { validatorMiddleware } from '../middlewares/validators.middleware';
 import {
+  createRoomSchema,
   deleteRoomSchema,
   findRoomByIdSchema,
   listRoomsSchema,
@@ -54,6 +56,15 @@ router.get(
   roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
   validatorMiddleware(findRoomByIdSchema, 1),
   findRoomByIdHandler,
+  internalErrorsMiddleware,
+);
+
+router.post(
+  '/rooms/new',
+  authenticationMiddleware,
+  roleMiddleware(['ADMIN']),
+  validatorMiddleware(createRoomSchema, 1),
+  createRoomHandler,
   internalErrorsMiddleware,
 );
 
