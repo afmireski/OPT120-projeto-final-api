@@ -60,3 +60,17 @@ export const listRoomsSchema = z.object({
     .optional(),
   pagination: paginationSchema.optional(),
 });
+
+export const findRoomByIdSchema = z.object({
+  params: z
+    .object({
+      id: z
+        .string({
+          message: 'Id inválido',
+        })
+        .regex(/^\d+$/, {
+          message: 'Id deve ser um número válido',
+        }),
+    })
+    .strict(),
+});

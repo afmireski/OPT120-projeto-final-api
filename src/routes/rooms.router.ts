@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   deleteRoomHandler,
+  findRoomByIdHandler,
   listRoomsHandler,
   updateRoomHandler,
 } from '../controllers/rooms.controller';
@@ -10,6 +11,7 @@ import { roleMiddleware } from '../middlewares/role.middleware';
 import { validatorMiddleware } from '../middlewares/validators.middleware';
 import {
   deleteRoomSchema,
+  findRoomByIdSchema,
   listRoomsSchema,
   updateRoomSchema,
 } from '../validators/rooms/rooms.schemas';
@@ -46,4 +48,13 @@ router.delete(
   deleteRoomHandler,
   internalErrorsMiddleware,
 );
+router.get(
+  '/rooms/:id',
+  authenticationMiddleware,
+  roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
+  validatorMiddleware(findRoomByIdSchema, 1),
+  findRoomByIdHandler,
+  internalErrorsMiddleware,
+);
+
 export default router;

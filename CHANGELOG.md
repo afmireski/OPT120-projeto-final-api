@@ -6,6 +6,7 @@
 
 ### ADDED
 
+* [#27](https://github.com/afmireski/OPT120-projeto-final-api/issues/27) - Criar rota que busca as informações de uma sala
 * [#13](https://github.com/afmireski/OPT120-projeto-final-api/issues/13) - Criar rota que lista as salas
 * [#26](https://github.com/afmireski/OPT120-projeto-final-api/issues/26) - Criar rota que permite editar uma sala
 * [#20](https://github.com/afmireski/OPT120-projeto-final-api/issues/20) - Criar rota que busca as informações de um usuário
