@@ -4,6 +4,34 @@ import { ListRoomsInput, UpdateRoomInput } from '../types/rooms.types';
 import { MetadataArray } from '../types/types';
 import { KnexService } from './knex.service';
 
+export const findRoomById = async (id: number): Promise<Room> => {
+  const knex = KnexService.getInstance().knex;
+
+  const query = knex({ r: 'rooms' })
+    .select('r.*')
+    .where('r.id', id)
+    .whereNull('r.deleted_at')
+    .first();
+
+  return query
+    .then((room: RoomModel) => {
+      if (!room) {
+        throw new InternalError(201);
+      }
+
+      const { updated_at, deleted_at, ...rest } = room;
+
+      return { ...rest };
+    })
+    .catch((e) => {
+      if (e instanceof InternalError) {
+        throw e;
+      }
+
+      throw new InternalError(203, [e.message]);
+    });
+};
+
 export const listRooms = async (
   input: ListRoomsInput,
 ): Promise<MetadataArray<Room>> => {
