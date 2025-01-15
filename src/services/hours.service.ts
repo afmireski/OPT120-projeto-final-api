@@ -1,4 +1,5 @@
 import { InternalError } from '../errors/internal.error';
+import { AvailabilityHours } from '../types/hours.types';
 import { KnexService } from './knex.service';
 import * as dfns from 'date-fns';
 
@@ -7,7 +8,7 @@ const DEFAULT_HOUR_INTERVAL_MINUTES = 60;
 export const listAvailabilityHours = async (
   roomId: number,
   day_of_week: number,
-): Promise<any> => {
+): Promise<AvailabilityHours> => {
   const knex = KnexService.getInstance().knex;
 
   const query = knex({
