@@ -13,7 +13,6 @@ export interface createRoomInput {
   closing_hour: Date;
 }
 
-
 export type ListRoomsFilters = {
   id: FilterRelation<number>;
   name: FilterRelation<string>;
