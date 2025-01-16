@@ -1,6 +1,7 @@
 import authErrors from './error-mapping/0-auth.errors';
 import usersErrors from './error-mapping/100-users.errors';
 import roomsErrors from './error-mapping/200-rooms.errors';
+import hoursErrors from './error-mapping/300-hours.errors';
 
 export type InternalMessage = {
   httpCode: number;
@@ -33,6 +34,8 @@ export class InternalError {
       return usersErrors[this.code];
     } else if (this.code < 300) {
       return roomsErrors[this.code];
+    } else if (this.code < 400) {
+      return hoursErrors[this.code];
     }
 
     this.code = -1;

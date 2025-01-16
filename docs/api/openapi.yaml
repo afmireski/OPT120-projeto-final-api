@@ -24,4 +24,8 @@ paths:
     $ref: './rooms/listRooms.yaml'
   /api/rooms/:id:
     $ref: './rooms/findRoomById.yaml'
+
+  # Hours
+  /api/hours/availability:
+    $ref: './hours/listAvailabilityHours.yaml'
     

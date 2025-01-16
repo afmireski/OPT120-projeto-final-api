@@ -1,0 +1,71 @@
+
+get:
+  tags:
+    - hours
+  summary: Lista os horários disponíveis de uma sala
+  description: "Permite a listagem dos horários disponíveis de uma sala específica"
+  parameters:
+    - in: headers
+      name: authorization
+      description: Token de autenticação
+      type: string
+      required: true
+    - in: query
+      name: room_id
+      description: ID da sala
+      type: integer
+      required: true
+      example: 1
+    - in: query
+      name: day_of_week
+      description: Dia da semana (1 para Domingo, 7 para Sábado)
+      type: integer
+      required: true
+      example: 1
+  responses:
+    '200':
+      description: Horas de disponibilidade listadas com sucesso
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              room_id:
+                type: integer
+                example: 1
+              day_of_week:
+                type: integer
+                example: 1
+              free_intervals:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    opening:
+                      type: string
+                      example: "08:00"
+                    closing:
+                      type: string
+                      example: "09:00"
+              occupied_intervals:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    opening:
+                      type: string
+                      example: "09:00"
+                    closing:
+                      type: string
+                      example: "10:00"
+    '400':
+      description: Requisição inválida
+    '401':
+      description: Não autorizado
+    '404':
+      description: Sala não encontrada
+    '500':
+      description: Erro interno do servidor

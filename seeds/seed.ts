@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 
 export async function seed(knex: Knex): Promise<void> {
-  await Promise.all([seedUsers(knex), seedRooms(knex)]);
+  await Promise.all([seedUsers(knex), seedRooms(knex), seedHours(knex)]);
 }
 
 const seedUsers = async (knex: Knex): Promise<void> => {
@@ -19,7 +19,7 @@ const seedUsers = async (knex: Knex): Promise<void> => {
     {
       email: 'student@email.com',
       password: PASSWORD,
-      ra: "1234567",
+      ra: '1234567',
       name: 'Student',
       role: 'STUDENT',
     },
@@ -65,6 +65,61 @@ const seedRooms = async (knex: Knex): Promise<void> => {
         resources: ['Projetor', 'Computador', 'Mesa', 'Cadeira'],
         description: 'Sala de aula',
       },
+    },
+  ]);
+};
+
+const seedHours = async (knex: Knex): Promise<void> => {
+  await knex('hours').del();
+
+  await knex('hours').insert([
+    {
+      room_id: 1,
+      week_day: 1,
+      opening: '08:00:00',
+      closing: '09:00:00',
+    },
+    {
+      room_id: 1,
+      week_day: 1,
+      opening: '10:00:00',
+      closing: '11:00:00',
+    },
+    {
+      room_id: 1,
+      week_day: 2,
+      opening: '14:00:00',
+      closing: '15:00:00',
+    },
+    {
+      room_id: 1,
+      week_day: 2,
+      opening: '15:00:00',
+      closing: '16:00:00',
+    },
+    {
+      room_id: 2,
+      week_day: 1,
+      opening: '12:00:00',
+      closing: '13:00:00',
+    },
+    {
+      room_id: 2,
+      week_day: 1,
+      opening: '17:00:00',
+      closing: '18:00:00',
+    },
+    {
+      room_id: 2,
+      week_day: 2,
+      opening: '12:00:00',
+      closing: '13:00:00',
+    },
+    {
+      room_id: 2,
+      week_day: 2,
+      opening: '14:00:00',
+      closing: '15:00:00',
     },
   ]);
 };
