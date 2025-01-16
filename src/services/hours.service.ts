@@ -7,7 +7,7 @@ const DEFAULT_HOUR_INTERVAL_MINUTES = 60;
 
 export const listAvailabilityHours = async (
   roomId: number,
-  day_of_week: number,
+  dayOfWeek: number,
 ): Promise<AvailabilityHours> => {
   const knex = KnexService.getInstance().knex;
 
@@ -17,7 +17,7 @@ export const listAvailabilityHours = async (
     .innerJoin({ r: 'rooms' }, 'r.id', 'h.room_id')
     .select('h.*', 'r.opening_hour', 'r.closing_hour')
     .where('h.room_id', roomId)
-    .where('h.week_day', day_of_week)
+    .where('h.week_day', dayOfWeek)
     .whereNull('h.deleted_at');
 
   return query.then((hours) => {
@@ -79,9 +79,21 @@ export const listAvailabilityHours = async (
 
     return {
       room_id: roomId,
-      day_of_week,
+      day_of_week: dayOfWeek,
       free_intervals: freeIntervals,
       occupied_intervals: occupiedIntervals,
     };
   });
+};
+
+export const removeHours = async (roomId: number, hoursIds: number[]) => {
+  const knex = KnexService.getInstance().knex;
+
+  return knex('hours')
+    .where('room_id', roomId)
+    .whereIn('id', hoursIds)
+    .whereNull('deleted_at')
+    .update({
+      deleted_at: new Date(),
+    });
 };
