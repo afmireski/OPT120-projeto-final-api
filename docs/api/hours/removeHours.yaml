@@ -1,0 +1,31 @@
+delete:
+  summary: Remove horas de disponibilidade
+  description: Remove horas de disponibilidade de uma sala específica.
+  tags:
+    - hours
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            room_id:
+              type: integer
+              description: ID da sala
+              example: 1
+            hours_ids:
+              type: array
+              items:
+                type: integer
+              description: IDs das horas a serem removidas
+              example: [1, 2, 3]
+  responses:
+    '204':
+      description: Horas removidas com sucesso
+    '400':
+      description: Requisição inválida
+    '401':
+      description: Não autorizado
+    '500':
+      description: Erro interno do servidor

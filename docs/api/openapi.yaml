@@ -28,4 +28,5 @@ paths:
   # Hours
   /api/hours/availability:
     $ref: './hours/listAvailabilityHours.yaml'
-    
+  /api/hours/del:
+    $ref: './hours/removeHours.yaml'
