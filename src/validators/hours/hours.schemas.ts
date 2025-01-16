@@ -8,3 +8,10 @@ export const listAvailabilityHoursSchema = z.object({
       .regex(/^[1-7]$/, 'day_of_week must be a string between 1 and 7'),
   }),
 });
+
+export const removeHoursSchema = z.object({
+  body: z.object({
+    room_id: z.number().min(1),
+    hours_ids: z.array(z.number().min(1)),
+  }),
+});
