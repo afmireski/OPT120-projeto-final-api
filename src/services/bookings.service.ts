@@ -14,6 +14,7 @@ export const approveBookingIntent = async (
     })
     .where('id', booking_id)
     .where('approved', false)
+    .where('day', '>=', knex.fn.now())
     .whereNotNull('user_id')
     .whereNull('deleted_at')
     .returning('*');
@@ -40,6 +41,7 @@ export const rejectBookingIntent = async (
     })
     .where('id', booking_id)
     .where('approved', false)
+    .where('day', '>=', knex.fn.now())
     .whereNotNull('user_id')
     .whereNull('deleted_at')
     .returning('*');
@@ -51,4 +53,28 @@ export const rejectBookingIntent = async (
 
     return result;
   });
-}
+};
+
+export const cancelBookingIntent = async (
+  booking_id: number,
+  user_id: number,
+): Promise<void> => {
+  const knex = KnexService.getInstance().knex;
+
+  const query = knex('bookings')
+    .update({
+      user_id: null,
+      approved: false,
+      updated_at: knex.fn.now(),
+    })
+    .where('id', booking_id)
+    .where('user_id', user_id)
+    .where('day', '>=', knex.fn.now())
+    .whereNull('deleted_at');
+
+  return query.then((result) => {
+    if (!result) {
+      throw new InternalError(407);
+    }
+  });
+};
