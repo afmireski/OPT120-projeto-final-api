@@ -6,6 +6,7 @@
 
 ### ADDED
 
+* [#2](https://github.com/afmireski/OPT120-projeto-final-api/issues/2) - Criar rota que cadastra uma lista de horários para uma sala
 * [#3](https://github.com/afmireski/OPT120-projeto-final-api/issues/3) - Criar rota que excluí horários de uma sala
 * [#1](https://github.com/afmireski/OPT120-projeto-final-api/issues/1) - Criar rota que lista os horários disponíveis para uma sala
 * [#27](https://github.com/afmireski/OPT120-projeto-final-api/issues/27) - Criar rota que busca as informações de uma sala
