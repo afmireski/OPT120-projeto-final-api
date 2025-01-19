@@ -112,46 +112,36 @@ const isIntervalOccupied = (
   intervals: any[],
   acc: any[],
 ): boolean => {
+  if (!acc?.length) {
+    return false;
+  }
+
   const parsedOpening = dfns.parse(opening, 'HH:mm', new Date());
   const parsedClosing = dfns.parse(closing, 'HH:mm', new Date());
 
   return intervals.some((interval: any) => {
-    if (
-      dfns.isWithinInterval(parsedOpening, {
-        start: interval.opening,
-        end: interval.closing,
-      }) ||
-      dfns.isWithinInterval(parsedClosing, {
-        start: interval.opening,
-        end: interval.closing,
-      })
-    ) {
-      const conflictWithPassed = acc.some(
-        (passedHour: any) =>
-          dfns.isWithinInterval(
-            dfns.parse(passedHour.opening, 'HH:mm', new Date()),
-            {
-              start: parsedOpening,
-              end: parsedClosing,
-            },
-          ) ||
-          dfns.isWithinInterval(
-            dfns.parse(passedHour.closing, 'HH:mm', new Date()),
-            {
-              start: parsedOpening,
-              end: parsedClosing,
-            },
-          ),
+    const intervalStart = interval.opening;
+    const intervalEnd = interval.closing;
+
+    const overlaps = dfns.areIntervalsOverlapping(
+      { start: parsedOpening, end: parsedClosing },
+      { start: intervalStart, end: intervalEnd },
+      { inclusive: false },
+    );
+
+    if (overlaps) {
+      const conflictWithPassed = acc.some((passedHour: any) =>
+        dfns.areIntervalsOverlapping(
+          { start: parsedOpening, end: parsedClosing },
+          {
+            start: dfns.parse(passedHour.opening, 'HH:mm', new Date()),
+            end: dfns.parse(passedHour.closing, 'HH:mm', new Date()),
+          },
+          { inclusive: true },
+        ),
       );
 
-      if (
-        dfns.isEqual(parsedClosing, interval.opening) ||
-        dfns.isEqual(parsedOpening, interval.closing)
-      ) {
-        return conflictWithPassed;
-      }
-
-      return true;
+      return conflictWithPassed || overlaps;
     }
 
     return false;
@@ -163,7 +153,7 @@ export const createHours = async (input: CreateHoursInput) => {
 
   const knex = KnexService.getInstance().knex;
 
-  const daysSet = new Set(newHours.map((d) => d.day_of_week));
+  const daysOfWeek = Array.from(new Set(newHours.map((d) => d.day_of_week)));
 
   const query = knex({
     h: 'hours',
@@ -177,38 +167,38 @@ export const createHours = async (input: CreateHoursInput) => {
       'r.closing_hour',
     )
     .where('h.room_id', roomId)
-    .whereIn('h.week_day', Array.from(daysSet))
+    .whereIn('h.week_day', daysOfWeek)
     .whereNull('h.deleted_at')
     .groupBy('h.week_day', 'r.id')
     .first();
 
   return query.then((result) => {
     console.log(result);
+    const initialIntervals = daysOfWeek.reduce((acc: any, day) => {
+      acc[day] = [];
+      return acc;
+    }, {});
 
     const occupidedIntervals = result.hours.reduce((acc: any, hour: any) => {
-      if (!acc[hour.week_day]) {
-        acc[hour.week_day] = [];
-      }
-
       acc[hour.week_day].push({
         opening: dfns.parse(hour.opening, 'HH:mm:ss', new Date()),
         closing: dfns.parse(hour.closing, 'HH:mm:ss', new Date()),
       });
       return acc;
-    }, {});
+    }, initialIntervals);
 
-    const data = newHours.reduce((validHoues: any, hour: NewHourData) => {
+    const data = newHours.reduce((validHours: any, hour: NewHourData) => {
       const { opening, closing, day_of_week } = hour;
 
       const isOccupied = isIntervalOccupied(
         opening,
         closing,
         occupidedIntervals[hour.day_of_week],
-        validHoues,
+        validHours,
       );
 
       if (!isOccupied) {
-        validHoues.push({
+        validHours.push({
           room_id: roomId,
           week_day: day_of_week,
           opening,
@@ -221,7 +211,7 @@ export const createHours = async (input: CreateHoursInput) => {
         });
       }
 
-      return validHoues;
+      return validHours;
     }, []);
 
     if (data.length === 0) {
