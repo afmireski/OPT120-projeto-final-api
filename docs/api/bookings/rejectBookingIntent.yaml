@@ -1,0 +1,67 @@
+post:
+  summary: Rejeita uma intenção de reserva
+  description: Rejeita uma intenção de reserva para uma sala específica.
+  tags:
+    - bookings
+  parameters:
+    - in: path
+      name: booking_id
+      required: true
+      schema:
+        type: string
+      description: ID da reserva
+      example: "2"
+  responses:
+    '200':
+      description: Reserva rejeitada com sucesso
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                description: ID da reserva
+                example: 2
+              room_id:
+                type: integer
+                description: ID da sala
+                example: 1
+              hour_id:
+                type: integer
+                description: ID da hora
+                example: 2
+              user_id:
+                type: integer
+                description: ID do usuário
+                example: null
+              day:
+                type: string
+                format: date-time
+                description: Data da reserva
+                example: "2024-11-02T00:00:00.000Z"
+              approved:
+                type: boolean
+                description: Status de aprovação
+                example: false
+              created_at:
+                type: string
+                format: date-time
+                description: Data de criação
+                example: "2025-01-19T19:33:11.855Z"
+              updated_at:
+                type: string
+                format: date-time
+                description: Data de atualização
+                example: "2025-01-19T20:28:16.669Z"
+              deleted_at:
+                type: string
+                format: date-time
+                description: Data de exclusão (se aplicável)
+                example: null
+    '400':
+      description: Requisição inválida
+    '401':
+      description: Não autorizado
+    '500':
+      description: Erro interno do servidor
