@@ -3,6 +3,7 @@ import {
   approveBookingIntentHandler,
   cancelBookingIntentHandler,
   rejectBookingIntentHandler,
+  excludeBookingHandler,
 } from '../controllers/bookings.controller';
 import { authenticationMiddleware } from '../middlewares/authentication.middleware';
 import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
@@ -12,6 +13,7 @@ import {
   approveBookingIntentSchema,
   cancelBookingIntentSchema,
   rejectBookingIntentSchema,
+  excludeBookingSchema,
 } from '../validators/bookings/bookings.schemas';
 
 export const router = Router();
@@ -40,6 +42,15 @@ router.post(
   roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
   validatorMiddleware(cancelBookingIntentSchema, 1),
   cancelBookingIntentHandler,
+  internalErrorsMiddleware,
+);
+
+router.delete(
+  '/bookings/:booking_id/del',
+  authenticationMiddleware,
+  roleMiddleware(['ADMIN']),
+  validatorMiddleware(excludeBookingSchema, 1),
+  excludeBookingHandler,
   internalErrorsMiddleware,
 );
 
