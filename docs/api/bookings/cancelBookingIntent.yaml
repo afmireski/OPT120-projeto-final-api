@@ -1,0 +1,22 @@
+post:
+  summary: Cancela uma intenção de reserva
+  description: Cancela uma intenção de reserva para uma sala específica.
+  tags:
+    - bookings
+  parameters:
+    - in: path
+      name: booking_id
+      required: true
+      schema:
+        type: string
+      description: ID da reserva
+      example: "2"
+  responses:
+    '200':
+      description: Reserva cancelada com sucesso
+    '400':
+      description: Requisição inválida
+    '401':
+      description: Não autorizado
+    '500':
+      description: Erro interno do servidor

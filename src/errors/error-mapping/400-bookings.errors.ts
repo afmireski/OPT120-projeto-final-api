@@ -21,6 +21,14 @@ const errors: Record<number, InternalMessage> = {
     message: 'Não foi possível aprovar a reserva',
     httpCode: 400,
   },
+  406: {
+    message: 'Não foi possível rejeitar a reserva',
+    httpCode: 400,
+  },
+  407: {
+    message: 'Não foi possível cancelar a reserva',
+    httpCode: 400,
+  },
 };
 
 export default errors;

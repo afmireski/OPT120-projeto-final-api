@@ -36,4 +36,8 @@ paths:
   # Bookings
   /api/bookings/:booking_id/approve-intent:
     $ref: './bookings/approveBookingIntent.yaml'
+  /api/bookings/:booking_id/reject:
+    $ref: './bookings/rejectBookingIntent.yaml'
+  /api/bookings/:booking_id/cancel:
+    $ref: './bookings/cancelBookingIntent.yaml'
 
