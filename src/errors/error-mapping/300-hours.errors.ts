@@ -13,6 +13,14 @@ const errors: Record<number, InternalMessage> = {
     message: 'Houve um erro ao tentar buscar os horários',
     httpCode: 500,
   },
+  304: {
+    message: 'Houve um erro ao tentar remover os horários',
+    httpCode: 500,
+  },
+  305: {
+    message: 'Nenhum dos horários informados é válido',
+    httpCode: 400,
+  },
 };
 
 export default errors;
