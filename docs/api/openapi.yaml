@@ -30,3 +30,6 @@ paths:
     $ref: './hours/listAvailabilityHours.yaml'
   /api/hours/del:
     $ref: './hours/removeHours.yaml'
+  /room/:room_id/hours/new:
+    $ref: './hours/createHours.yaml'
+
