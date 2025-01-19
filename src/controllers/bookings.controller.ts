@@ -3,6 +3,7 @@ import {
   approveBookingIntent,
   cancelBookingIntent,
   rejectBookingIntent,
+  excludeBooking,
 } from '../services/bookings.service';
 
 export const approveBookingIntentHandler = async (
@@ -54,6 +55,24 @@ export const cancelBookingIntentHandler = async (
   const userId = user!.id;
 
   return cancelBookingIntent(Number(booking_id), userId)
+    .then(() => {
+      res.status(200).json();
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const excludeBookingHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const {
+    params: { booking_id },
+  } = req;
+
+  return excludeBooking(Number(booking_id))
     .then(() => {
       res.status(200).json();
     })

@@ -78,3 +78,20 @@ export const cancelBookingIntent = async (
     }
   });
 };
+
+export const excludeBooking = async (booking_id: number): Promise<void> => {
+  const knex = KnexService.getInstance().knex;
+
+  const query = knex('bookings')
+    .update({
+      deleted_at: knex.fn.now(),
+    })
+    .where('id', booking_id)
+    .whereNull('deleted_at');
+
+  return query.then((result) => {
+    if (!result) {
+      throw new InternalError(404);
+    }
+  });
+};

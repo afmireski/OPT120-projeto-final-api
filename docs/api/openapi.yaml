@@ -40,4 +40,6 @@ paths:
     $ref: './bookings/rejectBookingIntent.yaml'
   /api/bookings/:booking_id/cancel:
     $ref: './bookings/cancelBookingIntent.yaml'
+  /api/bookings/:booking_id/del:
+    $ref: './bookings/excludeBooking.yaml'
 

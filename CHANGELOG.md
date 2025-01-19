@@ -6,6 +6,9 @@
 
 ### ADDED
 
+* [#9](https://github.com/afmireski/OPT120-projeto-final-api/issues/9) - Criar rota que excluí uma reserva
+* [#8](https://github.com/afmireski/OPT120-projeto-final-api/issues/8) - Criar rota que cancela uma reserva
+    * Foi implementada também uma rota que permite ao ADMIN rejeitar uma reserva.
 * [#7](https://github.com/afmireski/OPT120-projeto-final-api/issues/7) - Criar rota que aprova uma reserva
 * [#2](https://github.com/afmireski/OPT120-projeto-final-api/issues/2) - Criar rota que cadastra uma lista de horários para uma sala
 * [#3](https://github.com/afmireski/OPT120-projeto-final-api/issues/3) - Criar rota que excluí horários de uma sala

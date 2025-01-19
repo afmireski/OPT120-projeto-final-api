@@ -41,3 +41,17 @@ export const cancelBookingIntentSchema = z.object({
     })
     .strict(),
 });
+
+export const excludeBookingSchema = z.object({
+  params: z
+    .object({
+      booking_id: z
+        .string({
+          message: 'Id inválido',
+        })
+        .regex(/^\d+$/, {
+          message: 'Id deve ser um número válido',
+        }),
+    })
+    .strict(),
+});
