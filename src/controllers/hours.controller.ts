@@ -1,5 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { listAvailabilityHours, removeHours } from '../services/hours.service';
+import {
+  createHours,
+  listAvailabilityHours,
+  removeHours,
+} from '../services/hours.service';
 
 export const listAvailabilityHoursHandler = async (
   req: Request,
@@ -31,6 +35,24 @@ export const removeHoursHandler = async (
   return removeHours(room_id, hours_ids)
     .then(() => {
       res.status(204).json();
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const createHoursHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const {
+    body: { room_id, hours: data },
+  } = req;
+
+  return createHours({ room_id, data })
+    .then((response) => {
+      res.status(201).json(response);
     })
     .catch((e) => {
       next(e);
