@@ -22,16 +22,6 @@ export interface Booking {
   deleted_at?: string | null;
 }
 
-export type ListBookingsFilters = {
-  id: FilterRelation<number>;
-  name: FilterRelation<string>;
-};
-
-export interface ListRoomBookingsInput {
-  filter?: ListBookingsFilters;
-  pagination?: Pagination;
-}
-
 export interface ListBookingHour {
   week_day: string;
   opening: string;
@@ -61,6 +51,8 @@ export interface ListBooking extends Booking {
 export type ListRoomBookingsFilters = {
   id: FilterRelation<number>;
   name: FilterRelation<string>;
+  state: FilterRelation<keyof typeof BookingState>;
+  'r.created_at': FilterRelation<string>;
 };
 
 export interface ListRoomBookingsInput {
