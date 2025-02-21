@@ -1,7 +1,7 @@
 import { InternalError } from '../errors/internal.error';
 import { Room, RoomModel } from '../models/rooms.model';
 import {
-  createRoomInput,
+  CreateRoomInput,
   ListRoomsInput,
   UpdateRoomInput,
 } from '../types/rooms.types';
@@ -175,7 +175,7 @@ export const deleteRoom = async (id: number): Promise<void> => {
     });
 };
 
-export const createRoom = async (input: createRoomInput): Promise<void> => {
+export const createRoom = async (input: CreateRoomInput): Promise<void> => {
   const knex = KnexService.getInstance().knex;
   const { name, informations, opening_hour, closing_hour } = input;
 
