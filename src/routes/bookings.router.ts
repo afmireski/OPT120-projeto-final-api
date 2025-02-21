@@ -4,6 +4,7 @@ import {
   cancelBookingIntentHandler,
   rejectBookingIntentHandler,
   excludeBookingHandler,
+  findBookingsByUserIdHandler,
 } from '../controllers/bookings.controller';
 import { authenticationMiddleware } from '../middlewares/authentication.middleware';
 import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
@@ -14,6 +15,7 @@ import {
   cancelBookingIntentSchema,
   rejectBookingIntentSchema,
   excludeBookingSchema,
+  listBookingsSchema,
 } from '../validators/bookings/bookings.schemas';
 
 export const router = Router();
@@ -53,5 +55,16 @@ router.delete(
   excludeBookingHandler,
   internalErrorsMiddleware,
 );
+
+router.get(
+  '/bookings/users/:user_id',
+  authenticationMiddleware,
+  roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
+  validatorMiddleware(listBookingsSchema, 1),
+  findBookingsByUserIdHandler,
+  internalErrorsMiddleware,
+);
+
+
 
 export default router;

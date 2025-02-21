@@ -1,5 +1,6 @@
 import { InternalError } from '../errors/internal.error';
-import { Booking } from '../types/bookings.types';
+import { Booking, ListBookingsInput } from '../types/bookings.types';
+import { MetadataArray } from '../types/types';
 import { KnexService } from './knex.service';
 
 export const approveBookingIntent = async (
@@ -95,3 +96,45 @@ export const excludeBooking = async (booking_id: number): Promise<void> => {
     }
   });
 };
+
+
+export const findBookingsByUserId = async (
+  userId: number,
+  input?: ListBookingsInput,
+): Promise<MetadataArray<Booking>> => {
+  const knex = KnexService.getInstance().knex;
+  const { filter, pagination } = input || {};
+
+  const countQuery = knex('bookings')
+    .count({ total: 'id' })
+    .where('user_id', userId)
+    .whereNull('deleted_at');
+
+  KnexService.appendFiltersToQuery(countQuery, filter);
+  console.log('countQuery:', countQuery.toString());
+
+  const countResult = await countQuery.first();
+  const total = countResult ? Number(countResult.total) : 0;
+  const query = knex('bookings')
+    .select('*')
+    .where('user_id', userId)
+    .whereNull('deleted_at');
+
+  KnexService.appendFiltersToQuery(query, filter);
+  KnexService.addPaginationToQuery(query, pagination);
+  query.orderBy('id');
+  console.log('query:', query.toString());
+
+  const bookings: Booking[] = await query;
+  const data = bookings.map(({ deleted_at, ...rest }) => rest);
+
+  return {
+    metadata: {
+      total,
+      page: pagination?.page,
+      limit: pagination?.limit,
+    },
+    data,
+  };
+};
+
