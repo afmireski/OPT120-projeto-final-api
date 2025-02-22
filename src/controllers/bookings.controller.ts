@@ -6,8 +6,10 @@ import {
   excludeBooking,
   findBookingsByUserId,
   getRoomBookings,
+  createBookingIntent,
 } from '../services/bookings.service';
 import {
+  CreateBookingIntentInput,
   ListRoomBookingsFilters,
   ListRoomBookingsInput,
 } from '../types/bookings.types';
@@ -125,6 +127,30 @@ export const findBookingsByUserIdHandler = (
   return findBookingsByUserId(Number(user_id))
     .then((response) => {
       res.status(200).json(response);
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const createBookingIntentHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { body, user } = req;
+
+  const { id, role } = user!;
+
+  const input: CreateBookingIntentInput = {
+    ...body,
+    user_id: id,
+    user_role: role,
+  };
+
+  return createBookingIntent(input)
+    .then((booking) => {
+      res.status(201).json(booking);
     })
     .catch((e) => {
       next(e);

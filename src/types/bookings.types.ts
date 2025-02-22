@@ -1,3 +1,4 @@
+import { UserRole } from '../models/users.model';
 import { FilterRelation, Pagination } from './types';
 
 export enum BookingState {
@@ -72,4 +73,12 @@ export interface ListRoomBookingsInput {
   room_id: number;
   filter?: ListRoomBookingsFilters;
   pagination?: Pagination;
+}
+
+export interface CreateBookingIntentInput {
+  user_id: number;
+  room_id: number;
+  hour_id: number;
+  date: Date;
+  user_role: keyof typeof UserRole;
 }
