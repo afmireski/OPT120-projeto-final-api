@@ -6,6 +6,7 @@ import {
   excludeBookingHandler,
   findBookingsByUserIdHandler,
   getRoomBookingsHandler,
+  createBookingIntentHandler,
 } from '../controllers/bookings.controller';
 import { authenticationMiddleware } from '../middlewares/authentication.middleware';
 import { internalErrorsMiddleware } from '../middlewares/errors.middleware';
@@ -15,11 +16,12 @@ import { extraFieldsMiddleware } from '../middlewares/extraFields.middleware';
 import { paginationMiddleware } from '../middlewares/pagination.middleware';
 import {
   approveBookingIntentSchema,
-  cancelBookingIntentSchema,
   rejectBookingIntentSchema,
   excludeBookingSchema,
   getRoomBookingsSchema,
   listBookingsSchema,
+  createBookingIntentSchema,
+  cancelBookingIntentSchema,
 } from '../validators/bookings/bookings.schemas';
 
 export const router = Router();
@@ -48,6 +50,15 @@ router.post(
   roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
   validatorMiddleware(cancelBookingIntentSchema, 1),
   cancelBookingIntentHandler,
+  internalErrorsMiddleware,
+);
+
+router.post(
+  '/bookings/new-intent',
+  authenticationMiddleware,
+  roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
+  validatorMiddleware(createBookingIntentSchema, 1),
+  createBookingIntentHandler,
   internalErrorsMiddleware,
 );
 

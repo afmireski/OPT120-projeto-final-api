@@ -93,3 +93,11 @@ export const listBookingsSchema = z.object({
     .optional(),
   pagination: paginationSchema.optional(),
 });
+
+export const createBookingIntentSchema = z.object({
+  body: z.object({
+    room_id: z.number().int().positive(),
+    hour_id: z.number().int().positive(),
+    date: z.string().date(),
+  }),
+});
