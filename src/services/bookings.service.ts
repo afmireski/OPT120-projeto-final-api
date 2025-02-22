@@ -1,6 +1,9 @@
+import * as dfns from 'date-fns';
 import { InternalError } from '../errors/internal.error';
+import { UserRole } from '../models/users.model';
 import {
   Booking,
+  CreateBookingIntentInput,
   ListBooking,
   ListBookingsInput,
   ListRoomBookingsInput,
@@ -231,4 +234,127 @@ export const getRoomBookings = async (
       data: formattedData,
     };
   });
+};
+
+export const createBookingIntent = async (
+  input: CreateBookingIntentInput,
+): Promise<Booking> => {
+  const knex = KnexService.getInstance().knex;
+
+  const { user_id, user_role, room_id, hour_id, date } = input;
+
+  const checkHourQuery = knex({ h: 'hours' })
+    .select('h.*')
+    .where('id', hour_id)
+    .first();
+
+  const checkExistingBookingsQuery = knex({ b: 'bookings' })
+    .select('b.*', 'u.role as user_role', 'h.week_day')
+    .innerJoin({ h: 'hours' }, 'h.id', 'b.hour_id')
+    .innerJoin({ u: 'users' }, 'u.id', 'b.user_id')
+    .where('b.room_id', room_id)
+    .where('b.hour_id', hour_id)
+    .where('b.day', date)
+    .whereNotIn('b.state', ['REJECTED', 'CANCELED'])
+    .whereNull('b.deleted_at');
+
+  const upperRoles: Array<keyof typeof UserRole> = ['SERVANT', 'ADMIN'];
+
+  return Promise.all([checkHourQuery, checkExistingBookingsQuery])
+    .then(([hour, existingBookings]) => {
+      if (!hour) {
+        throw new InternalError(301);
+      }
+
+      const dateOfBooking = new Date(date);
+      const dayOfBooking = dfns.getDay(dateOfBooking);
+      const now = new Date();
+
+      if (dfns.isAfter(now, dateOfBooking)) {
+        throw new InternalError(409);
+      } else if (dayOfBooking !== hour.week_day) {
+        throw new InternalError(410);
+      }
+
+      if (user_role === 'STUDENT') {
+        // Verifica se já existem reservas
+        if (existingBookings.length) {
+          // Se houver alguma reserva de um professor ou administrador,
+          // ou se houver uma reserva aprovada, não permite a reserva por um aluno.
+          const hasApprovedBooking = existingBookings.some(
+            (booking) =>
+              upperRoles.includes(booking.user_role) ||
+              booking.state === 'APPROVED',
+          );
+
+          if (hasApprovedBooking) {
+            throw new InternalError(408);
+          }
+        }
+
+        // Cria uma reserva pendente para o aluno
+        const insertQuery = knex('bookings')
+          .insert({
+            user_id,
+            room_id,
+            hour_id,
+            day: date,
+            state: 'PENDING',
+          })
+          .returning('*');
+
+        return insertQuery;
+      }
+
+      return knex.transaction((trx) => {
+        // Cria uma reserva aprovada
+        const insertQuery = trx('bookings')
+          .insert({
+            user_id,
+            room_id,
+            hour_id,
+            day: date,
+            state: 'APPROVED',
+          })
+          .returning('*');
+
+        const queries: Array<Promise<any>> = [insertQuery];
+        // Verifica se já existem reservas
+        if (existingBookings.length) {
+          // Se houver alguma reserva de um professor, ou administrador, aprovada,
+          // impede a reserva
+          const hasApprovedBooking = existingBookings.some(
+            (booking) =>
+              upperRoles.includes(booking.user_role) &&
+              booking.state === 'APPROVED',
+          );
+
+          if (hasApprovedBooking) {
+            throw new InternalError(408);
+          }
+
+          // Rejeita todas as outras reservas pendentes,
+          // inclusive reservas aprovadas de alunos
+          const rejectBookingsQuery = trx('bookings')
+            .update({
+              state: 'REJECTED',
+              updated_at: knex.fn.now(),
+              rejected_at: knex.fn.now(),
+            })
+            .where('room_id', room_id)
+            .where('hour_id', hour_id)
+            .where('day', date)
+            .whereNot('state', 'CANCELED')
+            .whereNot('user_id', user_id)
+            .whereNull('deleted_at');
+
+          queries.push(rejectBookingsQuery);
+        }
+
+        return Promise.all(queries).then(([booking]) => booking);
+      });
+    })
+    .then(([result]) => {
+      return result as Booking;
+    });
 };
