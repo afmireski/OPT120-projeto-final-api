@@ -18,6 +18,8 @@ import {
   cancelBookingIntentSchema,
   rejectBookingIntentSchema,
   excludeBookingSchema,
+  getRoomBookingsSchema,
+  listBookingsSchema,
 } from '../validators/bookings/bookings.schemas';
 
 export const router = Router();
@@ -77,7 +79,5 @@ router.get(
   findBookingsByUserIdHandler,
   internalErrorsMiddleware,
 );
-
-
 
 export default router;

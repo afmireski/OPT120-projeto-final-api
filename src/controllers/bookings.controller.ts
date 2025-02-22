@@ -119,10 +119,10 @@ export const findBookingsByUserIdHandler = (
   next: NextFunction,
 ) => {
   const {
-    params: { id: roomId },
+    params: { user_id },
   } = req;
 
-  return findBookingsByUserId(Number(roomId))
+  return findBookingsByUserId(Number(user_id))
     .then((response) => {
       res.status(200).json(response);
     })
