@@ -24,11 +24,11 @@ export const approveBookingIntent = async (
 
   const query = knex('bookings')
     .update({
-      approved: true,
+      state: 'APPROVED',
       updated_at: knex.fn.now(),
+      approved_at: knex.fn.now(),
     })
     .where('id', booking_id)
-    .where('approved', false)
     .where('day', '>=', knex.fn.now())
     .where('state', 'PENDING')
     .whereNull('deleted_at')
@@ -297,7 +297,7 @@ export const createBookingIntent = async (
       }
 
       const dateOfBooking = new Date(date);
-      const dayOfBooking = dfns.getDay(dateOfBooking);
+      const dayOfBooking = dfns.getDay(dateOfBooking) + 1;
       const now = new Date();
 
       if (dfns.isAfter(now, dateOfBooking)) {
