@@ -1,0 +1,125 @@
+get:
+  summary: Listar reservas de uma sala
+  description: Retorna uma lista de reservas para uma sala específica.
+  tags:
+    - Bookings
+  parameters:
+    - name: room_id
+      in: path
+      required: true
+      description: ID da sala
+      schema:
+        type: integer
+    - name: limit
+      in: query
+      required: false
+      description: Limite de resultados por página
+      schema:
+        type: integer
+    - name: offset
+      in: query
+      required: false
+      description: Deslocamento para paginação
+      schema:
+        type: integer
+  responses:
+    '200':
+      description: Lista de reservas
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              metadata:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    room_id:
+                      type: integer
+                    hour_id:
+                      type: integer
+                    user_id:
+                      type: integer
+                      nullable: true
+                    day:
+                      type: string
+                      format: date
+                    state:
+                      type: string
+                      enum: [PENDING, APPROVED, REJECTED, CANCELED]
+                    approved_at:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    rejected_at:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    canceled_at:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    created_at:
+                      type: string
+                      format: date-time
+                    updated_at:
+                      type: string
+                      format: date-time
+                    deleted_at:
+                      type: string
+                      format: date-time
+                      nullable: true
+                    hour:
+                      type: object
+                      properties:
+                        week_day:
+                          type: string
+                        opening:
+                          type: string
+                        closing:
+                          type: string
+                    room:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        informations:
+                          type: object
+                        opening_hour:
+                          type: string
+                        closing_hour:
+                          type: string
+                    user:
+                      type: object
+                      nullable: true
+                      properties:
+                        name:
+                          type: string
+                        email:
+                          type: string
+                        ra:
+                          type: string
+                        role:
+                          type: string
+    '400':
+      description: Requisição inválida
+    '401':
+      description: Não autorizado
+    '403':
+      description: Proibido
+    '404':
+      description: Não encontrado
+    '500':
+      description: Erro interno do servidor

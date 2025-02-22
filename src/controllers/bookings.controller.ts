@@ -5,7 +5,12 @@ import {
   rejectBookingIntent,
   excludeBooking,
   findBookingsByUserId,
+  getRoomBookings,
 } from '../services/bookings.service';
+import {
+  ListRoomBookingsFilters,
+  ListRoomBookingsInput,
+} from '../types/bookings.types';
 
 export const approveBookingIntentHandler = async (
   req: Request,
@@ -76,6 +81,32 @@ export const excludeBookingHandler = async (
   return excludeBooking(Number(booking_id))
     .then(() => {
       res.status(200).json();
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const getRoomBookingsHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const {
+    params: { room_id },
+    filters: filter,
+    pagination,
+  } = req;
+
+  const input: ListRoomBookingsInput = {
+    room_id: Number(room_id),
+    filter: filter as ListRoomBookingsFilters,
+    pagination,
+  };
+
+  return getRoomBookings(input)
+    .then((bookings) => {
+      res.status(200).json(bookings);
     })
     .catch((e) => {
       next(e);

@@ -6,7 +6,7 @@ export interface UpdateRoomInput {
   opening_hour?: Date;
   closing_hour?: Date;
 }
-export interface createRoomInput {
+export interface CreateRoomInput {
   name: string;
   informations?: Record<string, unknown>;
   opening_hour: Date;
@@ -21,4 +21,15 @@ export type ListRoomsFilters = {
 export interface ListRoomsInput {
   filter?: ListRoomsFilters;
   pagination?: Pagination;
+}
+
+export interface Room {
+  id: number;
+  name: string;
+  informations: Record<string, unknown>;
+  opening_hour: string;
+  closing_hour: string;
+  created_at: Date;
+  updated_at: Date;
+  deleted_at?: Date | null;
 }
