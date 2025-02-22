@@ -73,11 +73,11 @@ export const rejectBookingIntent = async (
   const query = knex('bookings')
     .update({
       user_id: null,
-      approved: false,
+      state: 'REJECTED',
       updated_at: knex.fn.now(),
+      rejected_at: knex.fn.now(),
     })
     .where('id', booking_id)
-    .where('approved', false)
     .where('day', '>=', knex.fn.now())
     .whereIn('state', ['PENDING', 'APPROVED'])
     .whereNull('deleted_at')
