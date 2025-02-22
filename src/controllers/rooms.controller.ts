@@ -97,7 +97,7 @@ export const createRoomHandler = (
   next: NextFunction,
 ) => {
   const {
-    body: { name, informations, opening_hour, closing_hour},
+    body: { name, informations, opening_hour, closing_hour },
   } = req;
 
   const input = {

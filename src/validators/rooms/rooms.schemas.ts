@@ -85,12 +85,12 @@ export const findRoomByIdSchema = z.object({
 //         .time({
 //           precision: 0,
 //         }),
-    //   closing_hour: z
-    //     .string()
-    //     .time({
-    //       precision: 0,
-    //     }),
-    // })
+//   closing_hour: z
+//     .string()
+//     .time({
+//       precision: 0,
+//     }),
+// })
 //     .strict(),
 // });
 
@@ -103,19 +103,19 @@ export const createRoomSchema = z
           .record(z.unknown())
           .refine(
             (info) => Object.keys(info).length > 0,
-            "O campo informações não pode ser vazio"
+            'O campo informações não pode ser vazio',
           ),
         opening_hour: z
           .string()
           .regex(
             /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
-            "A hora de abertura deve estar no formato HH:MM:SS"
+            'A hora de abertura deve estar no formato HH:MM:SS',
           ),
         closing_hour: z
           .string()
           .regex(
             /^([01]\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
-            "A hora de fechamento deve estar no formato HH:MM:SS"
+            'A hora de fechamento deve estar no formato HH:MM:SS',
           ),
       })
       .strict(),
@@ -124,12 +124,15 @@ export const createRoomSchema = z
     ({ body }) => {
       const { opening_hour, closing_hour } = body;
 
-      if (typeof opening_hour === "string" && typeof closing_hour === "string") {
+      if (
+        typeof opening_hour === 'string' &&
+        typeof closing_hour === 'string'
+      ) {
         const [openHours, openMinutes, openSeconds] = opening_hour
-          .split(":")
+          .split(':')
           .map(Number);
         const [closeHours, closeMinutes, closeSeconds] = closing_hour
-          .split(":")
+          .split(':')
           .map(Number);
 
         const openTimeInSeconds =
@@ -143,7 +146,8 @@ export const createRoomSchema = z
       return true; // Caso os tipos não sejam strings, pula a validação
     },
     {
-      message: "A hora de abertura não pode ser maior ou igual à hora de fechamento",
-      path: ["body", "opening_hour"],
-    }
+      message:
+        'A hora de abertura não pode ser maior ou igual à hora de fechamento',
+      path: ['body', 'opening_hour'],
+    },
   );
