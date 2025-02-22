@@ -27,6 +27,11 @@ export type ListBookingsFilters = {
   name: FilterRelation<string>;
 };
 
+export interface ListBookingsInput {
+  filter?: ListBookingsFilters;
+  pagination?: Pagination;
+}
+
 export interface ListRoomBookingsInput {
   filter?: ListBookingsFilters;
   pagination?: Pagination;

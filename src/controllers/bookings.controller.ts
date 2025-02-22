@@ -4,6 +4,7 @@ import {
   cancelBookingIntent,
   rejectBookingIntent,
   excludeBooking,
+  findBookingsByUserId,
   getRoomBookings,
 } from '../services/bookings.service';
 import {
@@ -106,6 +107,24 @@ export const getRoomBookingsHandler = async (
   return getRoomBookings(input)
     .then((bookings) => {
       res.status(200).json(bookings);
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const findBookingsByUserIdHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const {
+    params: { user_id },
+  } = req;
+
+  return findBookingsByUserId(Number(user_id))
+    .then((response) => {
+      res.status(200).json(response);
     })
     .catch((e) => {
       next(e);

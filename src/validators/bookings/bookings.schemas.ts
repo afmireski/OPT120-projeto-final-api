@@ -84,3 +84,12 @@ export const getRoomBookingsSchema = z.object({
     .optional(),
   pagination: paginationSchema.optional(),
 });
+
+export const listBookingsSchema = z.object({
+  filters: z
+    .object({
+      id: numberRelationSchema.optional(),
+    })
+    .optional(),
+  pagination: paginationSchema.optional(),
+});
