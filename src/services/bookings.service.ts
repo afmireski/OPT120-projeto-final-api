@@ -16,6 +16,12 @@ export const approveBookingIntent = async (
 ): Promise<Booking> => {
   const knex = KnexService.getInstance().knex;
 
+  const findIntentQuery = knex({ b: 'bookings' })
+    .select('b.*')
+    .where('b.id', booking_id)
+    .whereNull('deleted_at')
+    .first();
+
   const query = knex('bookings')
     .update({
       approved: true,
@@ -24,17 +30,39 @@ export const approveBookingIntent = async (
     .where('id', booking_id)
     .where('approved', false)
     .where('day', '>=', knex.fn.now())
-    .whereNotNull('user_id')
+    .where('state', 'PENDING')
     .whereNull('deleted_at')
     .returning('*');
 
-  return query.then(([result]) => {
-    if (!result) {
-      throw new InternalError(405);
-    }
+  return findIntentQuery
+    .then(async (intent) => {
+      if (!intent) {
+        throw new InternalError(401);
+      }
 
-    return result;
-  });
+      const hasApprovedBooking = !!(await knex({ b: 'bookings' })
+        .select('b.*')
+        .where('b.room_id', intent.room_id)
+        .where('b.hour_id', intent.hour_id)
+        .where('b.day', intent.day)
+        .where('b.state', 'APPROVED')
+        .whereNot('b.id', booking_id)
+        .whereNull('b.deleted_at')
+        .first());
+
+      if (hasApprovedBooking) {
+        throw new InternalError(408);
+      }
+
+      return query;
+    })
+    .then(([result]) => {
+      if (!result) {
+        throw new InternalError(405);
+      }
+
+      return result;
+    });
 };
 
 export const rejectBookingIntent = async (
@@ -51,7 +79,7 @@ export const rejectBookingIntent = async (
     .where('id', booking_id)
     .where('approved', false)
     .where('day', '>=', knex.fn.now())
-    .whereNotNull('user_id')
+    .whereIn('state', ['PENDING', 'APPROVED'])
     .whereNull('deleted_at')
     .returning('*');
 
@@ -73,12 +101,14 @@ export const cancelBookingIntent = async (
   const query = knex('bookings')
     .update({
       user_id: null,
-      approved: false,
+      state: 'CANCELED',
       updated_at: knex.fn.now(),
+      canceled_at: knex.fn.now(),
     })
     .where('id', booking_id)
     .where('user_id', user_id)
     .where('day', '>=', knex.fn.now())
+    .whereIn('state', ['PENDING', 'APPROVED'])
     .whereNull('deleted_at');
 
   return query.then((result) => {
