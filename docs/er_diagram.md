@@ -38,7 +38,7 @@ erDiagram
         int id PK "AUTOINCREMENT"
         int room_id FK,UK "UK01"
         int hour_id FK,UK "UK01"
-        int user_id FK "nullable"
+        int user_id FK "UK01"
         date day UK "UK01"
         bool approved
         datetime created_at
