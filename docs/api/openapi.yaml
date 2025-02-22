@@ -42,4 +42,6 @@ paths:
     $ref: './bookings/cancelBookingIntent.yaml'
   /api/bookings/:booking_id/del:
     $ref: './bookings/excludeBooking.yaml'
+  /rooms/{room_id}/bookings:
+    $ref: './bookings/getRoomBookings.yaml'
 
