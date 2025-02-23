@@ -23,21 +23,6 @@ export interface Booking {
   deleted_at?: string | null;
 }
 
-export type ListBookingsFilters = {
-  id: FilterRelation<number>;
-  name: FilterRelation<string>;
-};
-
-export interface ListBookingsInput {
-  filter?: ListBookingsFilters;
-  pagination?: Pagination;
-}
-
-export interface ListRoomBookingsInput {
-  filter?: ListBookingsFilters;
-  pagination?: Pagination;
-}
-
 export interface ListBookingHour {
   week_day: string;
   opening: string;
@@ -67,11 +52,13 @@ export interface ListBooking extends Booking {
 export type ListRoomBookingsFilters = {
   id: FilterRelation<number>;
   name: FilterRelation<string>;
+  date: FilterRelation<string>;
+  state: FilterRelation<keyof typeof BookingState>;
 };
 
 export interface ListRoomBookingsInput {
   room_id: number;
-  filter?: ListRoomBookingsFilters;
+  filter?: Omit<ListBookingsFilters, 'b.room_id'>;
   pagination?: Pagination;
 }
 
@@ -81,4 +68,23 @@ export interface CreateBookingIntentInput {
   hour_id: number;
   date: Date;
   user_role: keyof typeof UserRole;
+}
+
+export type ListBookingsFilters = {
+  'b.id'?: FilterRelation<number>;
+  'b.name'?: FilterRelation<string>;
+  'b.day'?: FilterRelation<string>;
+  'b.state'?: FilterRelation<keyof typeof BookingState>;
+  'b.room_id'?: FilterRelation<number>;
+  'u.name'?: FilterRelation<string>;
+  'u.email'?: FilterRelation<string>;
+  'u.ra'?: FilterRelation<string>;
+  'b.hour_id'?: FilterRelation<number>;
+  'h.week_day'?: FilterRelation<number>;
+  'u.role'?: FilterRelation<keyof typeof UserRole>;
+};
+
+export interface ListBookingsInput {
+  filter?: ListBookingsFilters;
+  pagination?: Pagination;
 }

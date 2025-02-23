@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import {
+  dateRelationSchema,
   numberRelationSchema,
   paginationSchema,
   stringRelationSchema,
@@ -75,11 +76,17 @@ export const getRoomBookingsSchema = z.object({
     .strict(),
   filters: z
     .object({
-      week_day: numberRelationSchema.optional(),
-      user_role: stringRelationSchema.optional(),
-      user_name: stringRelationSchema.optional(),
-      user_email: stringRelationSchema.optional(),
-      state: stringRelationSchema.optional(),
+      'b.id': numberRelationSchema.optional(),
+      'b.day': dateRelationSchema.optional(),
+      'b.state': stringRelationSchema.optional(),
+      'b.room_id': numberRelationSchema.optional(),
+      'r.name': stringRelationSchema.optional(),
+      'u.name': stringRelationSchema.optional(),
+      'u.email': stringRelationSchema.optional(),
+      'u.ra': stringRelationSchema.optional(),
+      'b.hour_id': numberRelationSchema.optional(),
+      'h.week_day': numberRelationSchema.optional(),
+      'u.role': stringRelationSchema.optional(),
     })
     .optional(),
   pagination: paginationSchema.optional(),
@@ -100,4 +107,23 @@ export const createBookingIntentSchema = z.object({
     hour_id: z.number().int().positive(),
     date: z.string().date(),
   }),
+});
+
+export const getBookingsSchema = z.object({
+  filters: z
+    .object({
+      'b.id': numberRelationSchema.optional(),
+      'b.day': dateRelationSchema.optional(),
+      'b.state': stringRelationSchema.optional(),
+      'b.room_id': numberRelationSchema.optional(),
+      'r.name': stringRelationSchema.optional(),
+      'u.name': stringRelationSchema.optional(),
+      'u.email': stringRelationSchema.optional(),
+      'u.ra': stringRelationSchema.optional(),
+      'b.hour_id': numberRelationSchema.optional(),
+      'h.week_day': numberRelationSchema.optional(),
+      'u.role': stringRelationSchema.optional(),
+    })
+    .optional(),
+  pagination: paginationSchema.optional(),
 });

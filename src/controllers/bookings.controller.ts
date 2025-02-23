@@ -2,15 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 import {
   approveBookingIntent,
   cancelBookingIntent,
-  rejectBookingIntent,
+  createBookingIntent,
   excludeBooking,
   findBookingsByUserId,
+  getBookings,
   getRoomBookings,
-  createBookingIntent,
+  rejectBookingIntent,
 } from '../services/bookings.service';
 import {
   CreateBookingIntentInput,
-  ListRoomBookingsFilters,
+  ListBookingsFilters,
+  ListBookingsInput,
   ListRoomBookingsInput,
 } from '../types/bookings.types';
 
@@ -102,7 +104,7 @@ export const getRoomBookingsHandler = async (
 
   const input: ListRoomBookingsInput = {
     room_id: Number(room_id),
-    filter: filter as ListRoomBookingsFilters,
+    filter: filter as ListBookingsFilters,
     pagination,
   };
 
@@ -151,6 +153,27 @@ export const createBookingIntentHandler = async (
   return createBookingIntent(input)
     .then((booking) => {
       res.status(201).json(booking);
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const getBookingsHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { filters: filter, pagination } = req;
+
+  const input: ListBookingsInput = {
+    filter: filter as Omit<ListBookingsFilters, 'b.room_id'>,
+    pagination,
+  };
+
+  return getBookings(input)
+    .then((bookings) => {
+      res.status(200).json(bookings);
     })
     .catch((e) => {
       next(e);
