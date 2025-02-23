@@ -124,9 +124,16 @@ export const findBookingsByUserIdHandler = (
 ) => {
   const {
     params: { user_id },
+    filters: filter,
+    pagination,
   } = req;
 
-  return findBookingsByUserId(Number(user_id))
+  const input: ListBookingsInput = {
+    filter,
+    pagination,
+  };
+
+  return findBookingsByUserId(Number(user_id), input)
     .then((response) => {
       res.status(200).json(response);
     })

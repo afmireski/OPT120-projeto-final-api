@@ -88,7 +88,9 @@ router.get(
   '/bookings/users/:user_id',
   authenticationMiddleware,
   roleMiddleware(['ADMIN', 'SERVANT', 'STUDENT']),
+  extraFieldsMiddleware(['filters', 'pagination']),
   validatorMiddleware(listBookingsSchema, 1),
+  paginationMiddleware,
   findBookingsByUserIdHandler,
   internalErrorsMiddleware,
 );

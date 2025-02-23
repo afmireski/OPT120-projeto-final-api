@@ -95,7 +95,17 @@ export const getRoomBookingsSchema = z.object({
 export const listBookingsSchema = z.object({
   filters: z
     .object({
-      id: numberRelationSchema.optional(),
+      'b.id': numberRelationSchema.optional(),
+      'b.day': dateRelationSchema.optional(),
+      'b.state': stringRelationSchema.optional(),
+      'b.room_id': numberRelationSchema.optional(),
+      'r.name': stringRelationSchema.optional(),
+      'u.name': stringRelationSchema.optional(),
+      'u.email': stringRelationSchema.optional(),
+      'u.ra': stringRelationSchema.optional(),
+      'b.hour_id': numberRelationSchema.optional(),
+      'h.week_day': numberRelationSchema.optional(),
+      'u.role': stringRelationSchema.optional(),
     })
     .optional(),
   pagination: paginationSchema.optional(),
