@@ -72,7 +72,6 @@ export const rejectBookingIntent = async (
 
   const query = knex('bookings')
     .update({
-      user_id: null,
       state: 'REJECTED',
       updated_at: knex.fn.now(),
       rejected_at: knex.fn.now(),
@@ -100,7 +99,6 @@ export const cancelBookingIntent = async (
 
   const query = knex('bookings')
     .update({
-      user_id: null,
       state: 'CANCELED',
       updated_at: knex.fn.now(),
       canceled_at: knex.fn.now(),
@@ -340,18 +338,15 @@ export const createBookingIntent = async (
   return Promise.all([checkHourQuery, checkExistingBookingsQuery])
     .then(([hour, existingBookings]) => {
       if (!hour) {
-        throw new InternalError(301);
+        throw new InternalError(301); // Horário não encontrado
       }
 
-      const dateOfBooking = new Date(date);
-      const dayOfBooking = dfns.getDay(dateOfBooking) + 1;
-      const now = new Date();
-
-      if (dfns.isAfter(now, dateOfBooking)) {
-        throw new InternalError(409);
-      } else if (dayOfBooking !== hour.week_day) {
-        throw new InternalError(410);
-      }
+      // Removidas as verificações de horário e data
+      // if (dfns.isAfter(now, dateOfBooking)) {
+      //   throw new InternalError(409); // Horário já passou
+      // } else if (dayOfBooking !== hour.week_day) {
+      //   throw new InternalError(410); // Data não bate com o horário
+      // }
 
       if (user_role === 'STUDENT') {
         // Verifica se já existem reservas
@@ -365,7 +360,7 @@ export const createBookingIntent = async (
           );
 
           if (hasApprovedBooking) {
-            throw new InternalError(408);
+            throw new InternalError(408); // Horário já reservado
           }
         }
 
@@ -407,7 +402,7 @@ export const createBookingIntent = async (
           );
 
           if (hasApprovedBooking) {
-            throw new InternalError(408);
+            throw new InternalError(408); // Horário já reservado
           }
 
           // Rejeita todas as outras reservas pendentes,
