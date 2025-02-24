@@ -8,7 +8,7 @@ export async function seed(knex: Knex): Promise<void> {
     seedRooms(knex), 
   ]);
 
-  await seedHours(knex);
+  // await seedHours(knex);
   await seedBookings(knex)
 }
 
