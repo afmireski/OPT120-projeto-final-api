@@ -3,6 +3,7 @@ import cors from 'cors';
 import { router } from './routes/router';
 import { ConfigService } from './config/config.service';
 import { KnexService } from './services/knex.service';
+import { expiredAllPendingBookings } from './services/bookings.service';
 
 async function main() {
   const app = express();
@@ -37,6 +38,11 @@ async function main() {
   app.listen(port, () => {
     console.log(`Server started at port ${port}`);
   });
+
+  const interval = 1 * 60 * 1000;
+  setInterval(async () => {
+    await expiredAllPendingBookings();
+  }, interval);
 }
 
 main();

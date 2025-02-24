@@ -8,7 +8,7 @@ export async function up(knex: Knex): Promise<void> {
 
         table.enum(
             'state',
-            ['PENDING', 'APPROVED', 'REJECTED', 'CANCELED'],
+            ['PENDING', 'APPROVED', 'REJECTED', 'CANCELED', 'EXPIRED'],
             { useNative: true, enumName: 'booking_state' },
         ).notNullable();
         table.timestamp('approved_at').nullable();

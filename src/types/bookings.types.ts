@@ -6,13 +6,14 @@ export enum BookingState {
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
   CANCELED = 'CANCELED',
+  EXPIRED = 'EXPIRED',
 }
 
 export interface Booking {
   id: number;
   room_id: number;
   hour_id: number;
-  user_id?: number;
+  user_id: number;
   day: string;
   state: keyof typeof BookingState;
   approved_at?: string | null;

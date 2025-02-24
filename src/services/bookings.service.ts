@@ -1,4 +1,3 @@
-import * as dfns from 'date-fns';
 import { InternalError } from '../errors/internal.error';
 import { UserRole } from '../models/users.model';
 import {
@@ -518,5 +517,25 @@ export const getBookings = async (
       },
       data: formattedData,
     };
+  });
+};
+
+export const expiredAllPendingBookings = async (): Promise<void> => {
+  const knex = KnexService.getInstance().knex;
+
+  const query = knex('bookings')
+    .update({
+      state: 'EXPIRED',
+      updated_at: knex.fn.now(),
+    })
+    .where('day', '<', knex.fn.now())
+    .where('state', 'PENDING')
+    .whereNull('deleted_at')
+    .returning('*');
+
+  return query.then((result) => {
+    result.forEach((booking: Booking) => {
+      console.log(`Reserva ${booking.id} expirada`);
+    });
   });
 };
