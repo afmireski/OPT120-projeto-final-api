@@ -12,6 +12,7 @@ import { KnexService } from './knex.service';
 
 export const approveBookingIntent = async (
   booking_id: number,
+  approved_by_id: number,
 ): Promise<Booking> => {
   const knex = KnexService.getInstance().knex;
 
@@ -26,6 +27,7 @@ export const approveBookingIntent = async (
       state: 'APPROVED',
       updated_at: knex.fn.now(),
       approved_at: knex.fn.now(),
+      approved_by: approved_by_id,
     })
     .where('id', booking_id)
     .where('day', '>=', knex.fn.now())
@@ -66,6 +68,7 @@ export const approveBookingIntent = async (
 
 export const rejectBookingIntent = async (
   booking_id: number,
+  rejected_by_id: number,
 ): Promise<Booking> => {
   const knex = KnexService.getInstance().knex;
 
@@ -74,6 +77,7 @@ export const rejectBookingIntent = async (
       state: 'REJECTED',
       updated_at: knex.fn.now(),
       rejected_at: knex.fn.now(),
+      rejected_by: rejected_by_id,
     })
     .where('id', booking_id)
     .where('day', '>=', knex.fn.now())
@@ -92,7 +96,7 @@ export const rejectBookingIntent = async (
 
 export const cancelBookingIntent = async (
   booking_id: number,
-  user_id: number,
+  canceled_by_id: number,
 ): Promise<void> => {
   const knex = KnexService.getInstance().knex;
 
@@ -101,9 +105,10 @@ export const cancelBookingIntent = async (
       state: 'CANCELED',
       updated_at: knex.fn.now(),
       canceled_at: knex.fn.now(),
+      canceled_by: canceled_by_id,
     })
     .where('id', booking_id)
-    .where('user_id', user_id)
+    .where('user_id', canceled_by_id)
     .where('day', '>=', knex.fn.now())
     .whereIn('state', ['PENDING', 'APPROVED'])
     .whereNull('deleted_at');

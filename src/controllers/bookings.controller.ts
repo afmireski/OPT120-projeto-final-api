@@ -23,9 +23,12 @@ export const approveBookingIntentHandler = async (
 ) => {
   const {
     params: { booking_id },
+    user,
   } = req;
 
-  return approveBookingIntent(Number(booking_id))
+  const userId = user!.id;
+
+  return approveBookingIntent(Number(booking_id), userId)
     .then((booking) => {
       res.status(200).json(booking);
     })
@@ -41,9 +44,12 @@ export const rejectBookingIntentHandler = async (
 ) => {
   const {
     params: { booking_id },
+    user,
   } = req;
 
-  return rejectBookingIntent(Number(booking_id))
+  const userId = user!.id;
+
+  return rejectBookingIntent(Number(booking_id), userId)
     .then((booking) => {
       res.status(200).json(booking);
     })
