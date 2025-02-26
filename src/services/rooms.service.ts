@@ -12,9 +12,12 @@ export const findRoomById = async (id: number): Promise<Room> => {
   const knex = KnexService.getInstance().knex;
 
   const query = knex({ r: 'rooms' })
-    .select('r.*')
+    .innerJoin({ h: 'hours' }, 'r.id', 'h.room_id')
+    .select('r.*', knex.raw('json_agg(h) as hours'))
     .where('r.id', id)
     .whereNull('r.deleted_at')
+    .whereNull('h.deleted_at')
+    .groupBy('r.id')
     .first();
 
   return query
@@ -53,7 +56,13 @@ export const listRooms = async (
 
   return countQuery
     .then(async ([count]) => {
-      const query = countQuery.clone().clearSelect().select('r.*');
+      const query = countQuery
+        .clone()
+        .clearSelect()
+        .innerJoin({ h: 'hours' }, 'r.id', 'h.room_id')
+        .select('r.*', knex.raw('json_agg(h) as hours'))
+        .groupBy('r.id');
+
       KnexService.addPaginationToQuery(query, pagination);
       query.orderBy('r.id', 'desc');
 
@@ -92,8 +101,6 @@ export const updateRoom = async (
     .first();
 
   const { opening_hour, closing_hour, informations } = input;
-
-  console.log('findQuery', findQuery.toString());
 
   return findQuery
     .then(async (room: RoomModel) => {

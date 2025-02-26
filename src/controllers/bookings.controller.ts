@@ -2,13 +2,17 @@ import { NextFunction, Request, Response } from 'express';
 import {
   approveBookingIntent,
   cancelBookingIntent,
-  rejectBookingIntent,
+  createBookingIntent,
   excludeBooking,
   findBookingsByUserId,
+  getBookings,
   getRoomBookings,
+  rejectBookingIntent,
 } from '../services/bookings.service';
 import {
-  ListRoomBookingsFilters,
+  CreateBookingIntentInput,
+  ListBookingsFilters,
+  ListBookingsInput,
   ListRoomBookingsInput,
 } from '../types/bookings.types';
 
@@ -19,9 +23,12 @@ export const approveBookingIntentHandler = async (
 ) => {
   const {
     params: { booking_id },
+    user,
   } = req;
 
-  return approveBookingIntent(Number(booking_id))
+  const userId = user!.id;
+
+  return approveBookingIntent(Number(booking_id), userId)
     .then((booking) => {
       res.status(200).json(booking);
     })
@@ -37,9 +44,12 @@ export const rejectBookingIntentHandler = async (
 ) => {
   const {
     params: { booking_id },
+    user,
   } = req;
 
-  return rejectBookingIntent(Number(booking_id))
+  const userId = user!.id;
+
+  return rejectBookingIntent(Number(booking_id), userId)
     .then((booking) => {
       res.status(200).json(booking);
     })
@@ -100,7 +110,7 @@ export const getRoomBookingsHandler = async (
 
   const input: ListRoomBookingsInput = {
     room_id: Number(room_id),
-    filter: filter as ListRoomBookingsFilters,
+    filter: filter as ListBookingsFilters,
     pagination,
   };
 
@@ -120,11 +130,63 @@ export const findBookingsByUserIdHandler = (
 ) => {
   const {
     params: { user_id },
+    filters: filter,
+    pagination,
   } = req;
 
-  return findBookingsByUserId(Number(user_id))
+  const input: ListBookingsInput = {
+    filter,
+    pagination,
+  };
+
+  return findBookingsByUserId(Number(user_id), input)
     .then((response) => {
       res.status(200).json(response);
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const createBookingIntentHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { body, user } = req;
+
+  const { id, role } = user!;
+
+  const input: CreateBookingIntentInput = {
+    ...body,
+    user_id: id,
+    user_role: role,
+  };
+
+  return createBookingIntent(input)
+    .then((booking) => {
+      res.status(201).json(booking);
+    })
+    .catch((e) => {
+      next(e);
+    });
+};
+
+export const getBookingsHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const { filters: filter, pagination } = req;
+
+  const input: ListBookingsInput = {
+    filter: filter as Omit<ListBookingsFilters, 'b.room_id'>,
+    pagination,
+  };
+
+  return getBookings(input)
+    .then((bookings) => {
+      res.status(200).json(bookings);
     })
     .catch((e) => {
       next(e);

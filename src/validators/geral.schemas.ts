@@ -23,6 +23,19 @@ export const numberRelationSchema = z
   })
   .strict();
 
+export const dateRelationSchema = z
+  .object({
+    eq: z.string().date().optional(),
+    ne: z.string().date().optional(),
+    in: z.array(z.string().date()).optional(),
+    nin: z.array(z.string().date()).optional(),
+    gt: z.string().date().optional(),
+    gte: z.string().date().optional(),
+    lt: z.string().date().optional(),
+    lte: z.string().date().optional(),
+  })
+  .strict();
+
 export const paginationSchema = z
   .object({
     page: z.number().int().positive().default(1),

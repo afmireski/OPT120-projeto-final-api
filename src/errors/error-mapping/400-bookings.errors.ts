@@ -29,6 +29,10 @@ const errors: Record<number, InternalMessage> = {
     message: 'Não foi possível cancelar a reserva',
     httpCode: 400,
   },
+  408: {
+    message: 'Alguém já reservou esse horário para essa sala',
+    httpCode: 400,
+  },
 };
 
 export default errors;
